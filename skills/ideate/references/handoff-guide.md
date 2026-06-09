@@ -24,7 +24,7 @@ After the locked-in recap, write the brief's final state and offer — verbatim 
 | **What this pack does NOT cover** (scope fence) | `Scope OUT / deferred` (named items) | Direct 1:1 |
 | **Phases + sequencing rationale** | `Phased roadmap` (spine-first, each phase verifiable) | Direct — "lock the spine, defer the rest" gives the phase shape |
 | **RULES block + build/test commands** | `Tech approach`, `Source-of-truth rules`, `Hard constraints` *inform* these | But the exact commands come from the repo's own `CLAUDE.md`/`AGENTS.md` — `prompt-pack` derives them |
-| **Architecture Map** (file:line refs) | **Not `ideate`'s job** | `prompt-pack` produces this in its own read-only deep-dive. For refinement, the `Parity contract` + repo pointer tell it where to look |
+| **Architecture Map** (file:line refs) | **Not `ideate`'s job** | `prompt-pack` produces this in its own read-only architecture reconnaissance. For refinement, the `Parity contract` + repo pointer tell it where to look |
 | Companion doc each prompt reads first | The CONCEPT_BRIEF itself | The brief travels with the pack |
 
 ## The boundary: what vs how

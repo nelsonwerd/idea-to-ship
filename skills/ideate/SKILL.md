@@ -8,8 +8,8 @@ description: >-
   kill criterion before any roadmap, and hands off cleanly to the prompt-pack
   skill for building. ALWAYS invoke when the user says any of "help me figure
   out what to build", "I have an idea for…", "is this idea any good", "pressure-
-  test this idea", "should I build / should I rebuild X", "evaluate my app /
-  idea", "where are we really at", "is this idea or app worth pursuing", "iron
+  test this idea", "should I build / should I rebuild X", "evaluate whether my app/idea is worth
+  building", "where are we really at", "is this idea or app worth pursuing", "iron
   out / scope / spec this concept", or "turn my idea into a plan/roadmap". Also
   invoke proactively when someone is reasoning about WHAT to build or WHETHER an
   idea is worth it — before any code or prompt pack exists.
@@ -48,7 +48,7 @@ This is non-negotiable and stated first because violating it is the most common,
 - "Help me figure out what to build" / "I have an idea for…" / "give me a few ideas for…"
 - "Is this idea any good?" / "pressure-test this" / "be honest about whether this is worth it"
 - "Should I build X?" / "should I rebuild / refactor / improve X?"
-- "Evaluate my app / repo / idea" / "where are we really at?" / "deep-dive this thing's viability"
+- "Evaluate whether to keep building my app / repo / idea" / "where are we really at?" / "is this thing's direction still right?"
 - "Iron out / scope / spec this concept" / "turn my idea into a plan"
 
 **Do NOT use this for:**
@@ -73,7 +73,7 @@ Detect the mode in the first exchange; it's the first branch. Full procedures in
 | Mode | Triggers | Opens with |
 |---|---|---|
 | **Greenfield** (fuzzy idea → concept) | "I have an idea", "help me figure out what to build", a blank-slate brain-dump | Constraints intake + a selection rubric, then **diverge wide** (5–7 comparable options) and **mine the user's own lived experience** for the wedge |
-| **Refinement** (existing thing → evaluate/improve) | "evaluate this", "should I rebuild X", "here's my repo, deep-dive it", "where are we really at" | A **four-lens deep-dive** — (1) what is it, (2) viability, (3) quality, (4) honest take — giving your **independent read *before* asking for the user's list** |
+| **Refinement** (existing thing → evaluate/improve) | "evaluate this", "should I rebuild X", "here's my repo, assess it", "where are we really at" | A **four-lens assessment** — (1) what is it, (2) viability, (3) quality, (4) honest take — giving your **independent read *before* asking for the user's list** |
 
 Both modes funnel into the **same pressure-test, the same convergence, and the same CONCEPT_BRIEF + handoff.** Refinement adds two artifacts greenfield doesn't need: a **parity contract** and a **pre-mortem**. Re-entry ("zoom out — is what we've built still the right thing?") is first-class refinement; expect to be invoked on projects already in motion, not just cold starts.
 
@@ -85,9 +85,9 @@ Detailed moves for each phase live in `references/facilitation-guide.md` and `re
 
 **Phase 1 — Explore (diverge).** Greenfield: generate 5–7 options in one comparable template, rank against the user's criteria, ask which they have *personal pain or insider insight* into, then mine their actual workflow for the wedge. Refinement: narrow, decision-oriented forks (rebuild vs polish, staged vs big-bang) with a recommended default.
 
-**Phase 2 — Pressure-test (the gate).** This is where `ideate` earns its keep. Run the pressure-test battery: honest two-sided assessment with a verdict; competitor buckets; market sizing + unit economics (label cited fact vs your estimate); feasibility tiers; a **red-team / steelman-the-failure** pass; and verify load-bearing claims against real artifacts (run the code, read the repo, check the web). **For high-stakes concepts, delegate the heavy validation to the `deep-dive` skill if you have it** (otherwise run the pressure-test battery inline). For demand signals, use whatever web/research tool is available; if none, label market-demand claims `[unverified]`. End with a written verdict (1–10 + named deltas) and a **go / iterate / kill** decision measured against the Phase-0 criterion. Killing or parking is a valid, honest outcome — say so and stop.
+**Phase 2 — Pressure-test (the gate).** This is where `ideate` earns its keep. Run the pressure-test battery: honest two-sided assessment with a verdict; competitor buckets; the viability lens that fits the concept's *type* (for a **commercial** product: market sizing + unit economics + pricing, labelling cited fact vs your estimate; for a **free / OSS / internal / personal / research** concept: the equivalent — reach or adoption, who benefits, and the real cost to build and sustain it); feasibility tiers; a **red-team / steelman-the-failure** pass; and verify load-bearing claims against real artifacts (run the code, read the repo, check the web). **For high-stakes concepts, delegate the heavy validation to the `deep-dive` skill if you have it** (otherwise run the pressure-test battery inline). For demand signals, use whatever web/research tool is available; if none, label market-demand claims `[unverified]`. End with a written verdict (1–10 + named deltas) and a **go / iterate / kill** decision measured against the Phase-0 criterion. Killing or parking is a valid, honest outcome — say so and stop.
 
-**Phase 3 — Converge (lock).** Lock decisions one at a time as the user reacts; mark each **LOCKED** in the brief with a one-line rationale (a decision log). Lock: one beachhead persona, the wedge, **scope IN / OUT with deferred items named**, pricing hypothesis, high-level tech approach, the Aha/activation moment, and top risks. **Lock the spine, defer the rest** — never pre-commit a giant downstream roadmap. Surface fuzzy sub-decisions as explicit **decision-forks**, not half-built guesses.
+**Phase 3 — Converge (lock).** Lock decisions one at a time as the user reacts; mark each **LOCKED** in the brief with a one-line rationale (a decision log). Lock: one beachhead persona, the wedge, **scope IN / OUT with deferred items named**, the **monetization / sustainability model** (a pricing hypothesis if it's commercial; "free / OSS / internal — no pricing" if it isn't), high-level tech approach, the Aha/activation moment, and top risks. **Lock the spine, defer the rest** — never pre-commit a giant downstream roadmap. Surface fuzzy sub-decisions as explicit **decision-forks**, not half-built guesses.
 
 **Phase 4 — Handoff (bounded end).** Name it now (name late, lock once — see naming discipline). Recap the locked concept, then **offer the handoff**: *"Your concept is locked and written to `docs/CONCEPT_BRIEF.md`. Want me to hand this to `prompt-pack` to turn the roadmap into sequenced build prompts?"* Then stop. `ideate` does not write build prompts or execute — that's the whole reason it and `prompt-pack` are separate.
 

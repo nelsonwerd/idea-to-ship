@@ -29,6 +29,7 @@ Rules that make the brief work:
 - **The wedge / differentiator:** <why this wins; the core idea/data-model *concept* in plain English, NOT a schema>  <!-- [required] -->
 - **Market evidence:** <cited external data — label [cited] vs [estimate]>  <!-- [optional] -->
 - **Competitive landscape:** <buckets: incumbents who could add it / direct clones / adjacent — and why we win anyway>  <!-- [optional; required if pressure-test surfaced incumbents] -->
+- **Monetization / sustainability model:** <how it stays alive — a pricing hypothesis if commercial; "free / OSS / internal / grant-funded / personal" if not>  <!-- [optional — only when there's a business or sustainability question; do not force a price onto a non-commercial concept] -->
 
 ## The gate  <!-- do NOT omit — these are the pieces real sessions skip and pay for later -->
 - **Success metric:** <the REAL definition of "this is working" — not a proxy>  <!-- [required] -->

@@ -16,7 +16,7 @@
 - Write the stub `CONCEPT_BRIEF.md`.
 
 ### Phase 1 — Explore (diverge wide)
-- Generate **5–7 options in ONE uniform, comparable template** so they can be judged side by side. A good per-option template: *Who pays · The pain · What it does · Why it wins · MVP in a sentence · Pricing guess · Build effort.*
+- Generate **5–7 options in ONE uniform, comparable template** so they can be judged side by side. A good per-option template: *Who it's for (and who pays, if it's commercial) · The pain · What it does · Why it wins · MVP in a sentence · Monetization or sustainability model · Build effort.*
 - **Rank the options against the user's stated rubric**, with a clear top pick and your reasoning.
 - Ask the **founder-market-fit question explicitly:** "Which of these do you have *personal pain* or insider insight into?" — that filter, more than the ranking, usually selects the lane.
 - Then **mine the user's lived reality:** "Walk me through how you (or your target) actually do this today, in detail — ramble freely." Reframe the anecdote into the wedge. (Real wedges and target segments far more often come from the user's own workflow than from the generated menu.)
@@ -27,9 +27,9 @@ Divergence here is genuinely wide — this is the one phase where blue-sky gener
 
 ## Refinement — existing thing → evaluate / improve
 
-**Triggers:** "evaluate this", "should I rebuild / refactor X", "improve my app", "here's my repo, deep-dive it", "where are we really at?" Note: this is the **more common real entry point** — people re-open the idea space repeatedly mid-project. Treat re-entry as first-class; don't assume a cold start. On re-entry, first **load any existing `docs/CONCEPT_BRIEF.md` and continue editing it** — don't start over.
+**Triggers:** "evaluate this", "should I rebuild / refactor X", "improve my app", "here's my repo, assess it", "where are we really at?" Note: this is the **more common real entry point** — people re-open the idea space repeatedly mid-project. Treat re-entry as first-class; don't assume a cold start. On re-entry, first **load any existing `docs/CONCEPT_BRIEF.md` and continue editing it** — don't start over.
 
-### Phase 0 — Open with the four-lens deep-dive
+### Phase 0 — Open with the four-lens assessment
 Run these in order, and **give your independent read before asking for the user's own notes** (anti-anchoring):
 1. **What is it / what does it do?** — demonstrate real comprehension of the existing thing first.
 2. **Viability** — should this exist? Is it a business / worth continuing? Honestly.
@@ -54,6 +54,6 @@ When improving or rebuilding something that already works, **the existing thing 
 
 ## Where the modes converge
 
-Both modes lead into the **same Phase 2 pressure-test, Phase 3 convergence, and the same CONCEPT_BRIEF + prompt-pack handoff.** The honesty contract, the success-metric/kill-criterion forcing functions, the scope-fence, the lock-the-spine discipline, naming, and the handoff are identical. Refinement just carries two extra brief sections (parity contract, current-state) and opens with the four-lens deep-dive instead of wide divergence.
+Both modes lead into the **same Phase 2 pressure-test, Phase 3 convergence, and the same CONCEPT_BRIEF + prompt-pack handoff.** The honesty contract, the success-metric/kill-criterion forcing functions, the scope-fence, the lock-the-spine discipline, naming, and the handoff are identical. Refinement just carries two extra brief sections (parity contract, current-state) and opens with the four-lens assessment instead of wide divergence.
 
 If you're unsure which mode you're in: is there an existing artifact (repo, app, draft) that the work must respect and not regress? If yes → refinement. If it's a blank slate → greenfield.

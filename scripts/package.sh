@@ -60,8 +60,12 @@ for name in "${skills[@]}"; do
   ( cd "$work" && zip -rqX "$out" "$name" )   # -X strips extra attrs for stabler archives
 
   # Verify the archive carries the two required files.
-  unzip -l "$out" | grep -q "$name/SKILL.md" || fail "$name: SKILL.md missing from archive"
-  unzip -l "$out" | grep -q "$name/LICENSE"  || fail "$name: LICENSE missing from archive"
+  # (Capture the listing first: piping `unzip -l` into `grep -q` lets grep close
+  # the pipe early, SIGPIPE-ing unzip, which `set -o pipefail` would report as a
+  # spurious failure. A here-string avoids the pipe entirely.)
+  listing="$(unzip -l "$out")"
+  grep -q "$name/SKILL.md" <<<"$listing" || fail "$name: SKILL.md missing from archive"
+  grep -q "$name/LICENSE"  <<<"$listing" || fail "$name: LICENSE missing from archive"
 
   sum="$(shasum -a 256 "$out" | awk '{print $1}')"
   echo "built $name.skill  sha256=$sum"
