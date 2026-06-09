@@ -39,6 +39,17 @@ A big job → ordered, self-contained prompts you run one-per-fresh-chat, plus h
 
 ## Install
 
+These follow the open **[Agent Skills](https://agentskills.io) standard**, so they work in **Claude *and* OpenAI Codex**. Quick pick by who you are:
+
+| You are… | Tool | How |
+|---|---|---|
+| **Non-technical** | Claude app (claude.ai / desktop) | Upload each skill's **`.skill`** zip (in this repo root) via the app's **Skills / Capabilities** settings → [Agent Skills docs](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview) |
+| **Developer** | Claude Code | the plugin or manual copy — see Option 1/2 below |
+| **Developer** | OpenAI Codex | copy each `skills/<name>/` into `.agents/skills/<name>/` (in your repo) or `~/.agents/skills/<name>/` (global) → [Codex skills docs](https://developers.openai.com/codex/skills) |
+| **Anyone** | any agent | open any `skills/<name>/SKILL.md` — it's just instructions |
+
+<sub>Menu names/commands drift between versions — linked docs are the source of truth. Claude-specific bits (the `plugin.json` bundle format; deep-dive's parallel-subagent orchestration) don't all carry to Codex; the *methodology* is portable.</sub>
+
 ### Option 1 — manual (simplest, always works)
 ```bash
 git clone https://github.com/nelsonwerd/idea-to-ship.git
