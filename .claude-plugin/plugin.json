@@ -1,0 +1,9 @@
+{
+  "name": "idea-to-ship",
+  "description": "A suite of three composable Claude Code skills for taking an idea from fuzzy to validated to sequenced build to shipped: ideate, deep-dive, and prompt-pack.",
+  "version": "1.0.0",
+  "author": { "name": "Drew Nelson" },
+  "homepage": "https://github.com/nelsonwerd/idea-to-ship",
+  "repository": { "type": "git", "url": "https://github.com/nelsonwerd/idea-to-ship" },
+  "license": "MIT"
+}

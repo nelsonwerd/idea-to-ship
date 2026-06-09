@@ -1,0 +1,12 @@
+{
+  "name": "nelsonwerd",
+  "owner": { "name": "Drew Nelson" },
+  "plugins": [
+    {
+      "name": "idea-to-ship",
+      "source": "nelsonwerd/idea-to-ship",
+      "description": "Three composable Claude Code skills — ideate, deep-dive, prompt-pack — for going from a fuzzy idea to shipped.",
+      "version": "1.0.0"
+    }
+  ]
+}
