@@ -1,6 +1,6 @@
 {
   "name": "idea-to-ship",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Three composable skills for taking an idea from fuzzy to validated to sequenced build to shipped: ideate, deep-dive, and prompt-pack.",
   "author": {
     "name": "Drew Nelson",
