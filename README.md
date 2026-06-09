@@ -62,13 +62,13 @@ These compose, but each also runs alone — install only the one you need.
 
 ## Install
 
-These follow the open **[Agent Skills](https://agentskills.io) standard**, so they work in **Claude *and* OpenAI Codex**. Quick pick by who you are:
+These follow the open **[Agent Skills](https://agentskills.io) standard**, so they work in **Claude *and* OpenAI Codex** — install all three at once as a **plugin** (Claude Code *or* Codex), or drop in individual skills. Quick pick by who you are:
 
 | You are… | Tool | How |
 |---|---|---|
 | **Non-technical** | Claude app (claude.ai / desktop) | Upload each skill's **`.skill`** zip (in this repo root) via the app's **Skills / Capabilities** settings → [Agent Skills docs](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview) |
 | **Developer** | Claude Code | the plugin or manual copy — see Option 1/2 below |
-| **Developer** | OpenAI Codex | copy each `skills/<name>/` into `.agents/skills/<name>/` (in your repo) or `~/.agents/skills/<name>/` (global) → [Codex skills docs](https://developers.openai.com/codex/skills) |
+| **Developer** | OpenAI Codex | install the bundled **plugin** (Option 3 below) — or copy each `skills/<name>/` into `.agents/skills/<name>/` (repo) or `~/.agents/skills/<name>/` (global) → [Codex skills docs](https://developers.openai.com/codex/skills) |
 | **Anyone** | any agent | open any `skills/<name>/SKILL.md` — it's just instructions |
 
 ### Compatibility by skill × runtime
@@ -98,6 +98,18 @@ Then use them directly — `/ideate`, `/deep-dive`, `/prompt-pack` — or just l
 Then open `/plugin`, find **idea-to-ship**, install it, and run `/reload-plugins`. The skills become available as `/idea-to-ship:ideate`, `/idea-to-ship:deep-dive`, `/idea-to-ship:prompt-pack` (and auto-activate on relevant requests).
 
 > **Already installed these individually?** They'll still work. For the manual method, remove the old folders first to avoid duplicates: `rm -rf ~/.claude/skills/{ideate,deep-dive,prompt-pack}`. (The plugin version is namespaced, so it won't collide.)
+
+### Option 3 — as an OpenAI Codex plugin (all three together)
+
+The repo is **also a Codex plugin** (`.codex-plugin/plugin.json`) that bundles the same three skills. Register it as a marketplace, then install:
+```bash
+codex plugin marketplace add nelsonwerd/idea-to-ship
+```
+Then run `/plugins` in Codex, find **idea-to-ship**, and select **Install**. The skills become available as `@ideate`, `@deep-dive`, `@prompt-pack` (and Codex invokes them on matching requests). In the **Codex app**, open **Plugins** in the sidebar to add and install it.
+
+<sub>Codex's plugin flow is newer and still evolving — the [official Codex plugins docs](https://developers.openai.com/codex/plugins) are the source of truth for the exact command/UX. No-plugin fallback (always works): copy `skills/<name>/` into `.agents/skills/` (per-repo) or `~/.agents/skills/` (global), as in the table above.</sub>
+
+> **Updating:** both plugins are versioned (currently **1.1.0**). In Claude Code, run `/plugin update` for the latest; in Codex, re-install from the plugin browser. Heads-up: Claude only fetches a plugin update when the **version changes** — so this `1.1.0` bump is what delivers the current skills to anyone already on `1.0.0`.
 
 ## Why this exists
 
