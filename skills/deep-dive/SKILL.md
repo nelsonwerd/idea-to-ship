@@ -2,7 +2,7 @@
 name: deep-dive
 description: >-
   Rigorous multi-agent deep-dive analysis for complex investigative tasks —
-  auditing codebases, evaluating trading strategies, validating designs, doing
+  auditing codebases, evaluating strategies or systems, validating designs, doing
   open-ended research. Deploys 4–6 specialist agents in parallel across
   distinct lanes, then synthesis, then adversarial red-team review, then
   optional patching — producing structured markdown research files plus a
@@ -33,7 +33,7 @@ This skill orchestrates rigorous multi-lane analysis for complex investigative t
 
 **Softer triggers** — invoke if the task is investigative and non-trivial:
 - The user describes a codebase or system and asks for "thoughts" or "objective analysis"
-- The user has built something and asks whether it's correct/safe/profitable
+- The user has built something and asks whether it's correct/safe/sound
 - The user asks open-ended research questions that span multiple domains
 - The user is making a high-stakes decision and needs structured evidence
 
@@ -52,11 +52,11 @@ Identify which variant fits, then read the matching reference file:
 | Variant | Trigger pattern | Reference |
 |---|---|---|
 | **Codebase audit** | "audit this codebase", "is this safe to ship", "review this build" | `references/codebase-audit.md` |
-| **Strategy evaluation** | "evaluate this strategy", "is this profitable", "analyze this trading system" | `references/strategy-evaluation.md` |
+| **Strategy / system evaluation** | "evaluate this strategy", "does this approach actually work", "is this sound" | `references/strategy-evaluation.md` |
 | **Research deep dive** | "research [open question]", "deep dive on [topic]" | `references/research-deep-dive.md` |
 | **Design evaluation** | "evaluate this design", "is this the right approach", "review this plan" | `references/design-evaluation.md` |
 
-If the user's request spans multiple variants (e.g., "audit this trading bot codebase") combine lanes from both reference files — the skill is composable. A codebase audit of a trading bot uses codebase-audit lanes plus strategy-evaluation lanes for the strategy logic itself.
+If the user's request spans multiple variants (e.g., "audit this pricing-engine codebase") combine lanes from both reference files — the skill is composable. A codebase audit of a system with non-trivial decision logic uses codebase-audit lanes plus strategy/system-evaluation lanes for the logic itself.
 
 If the scope is genuinely ambiguous, ask **one or two** clarifying questions before deploying agents. Don't ask a barrage. Examples:
 - "Pure research mode (no code changes) or are fixes in scope?"
@@ -70,7 +70,7 @@ Every deep dive runs this loop. Adapt depth based on scope, but don't skip phase
 
 ### Phase 0: Setup (do first, every time)
 
-1. Mark a session chapter with `mcp__ccd_session__mark_chapter` using a clear title (e.g., "BTC bot codebase deep dive").
+1. Mark a session chapter with `mcp__ccd_session__mark_chapter` using a clear title (e.g., "Payments service codebase deep dive").
 2. Create a research output directory. Default: `research/<topic>/` at repo root, or wherever the user's existing conventions point. If a `research/` directory already exists, use it.
 3. Set up task tracking with `TaskCreate` — one task per phase, then specific tasks for each specialist agent. This gives the user a progress signal during the long parallel work.
 4. Do a 30-second initial sweep: list files, read README if present, check git log. This grounds the agent prompts in reality.
@@ -161,14 +161,14 @@ Avoid marketing-grade numbers. Reject the urge to round up. If two pieces of evi
 For any load-bearing numerical claim:
 - Single source = downweight; flag for follow-up verification
 - 2+ independent sources confirming = accept
-- Peer-reviewed or replicable backtest = accept with normal caveats
+- Peer-reviewed or independently replicated result = accept with normal caveats
 - Marketing tweet or vendor blog = treat as hypothesis, not evidence
 
-When specialists report surprising numbers (e.g., "X strategy has 68.8% win rate"), the orchestrator's instinct should be: "where did that number come from, and is the source itself a single tweet?"
+When specialists report surprising numbers (e.g., "this approach hits a 95% success rate"), the orchestrator's instinct should be: "where did that number come from, and is the source itself a single post?"
 
 ### Severity tiers (use consistently)
 
-- **Blocker**: must fix before any forward motion (e.g., live trading, ship to prod)
+- **Blocker**: must fix before any forward motion (e.g., going live, ship to prod)
 - **High**: must fix before scaling or expanding scope
 - **Medium**: should fix; not safety-critical
 - **Low**: hygiene
@@ -211,7 +211,7 @@ This convention makes the evidence package navigable months later.
 - **Don't skip red-team for high-stakes work.** The synthesis agent is biased toward the specialists' framing; only an adversarial reviewer catches blind spots.
 - **Don't trust single-source numerical claims.** Always flag them for follow-up.
 - **Don't bury the lede.** Executive briefings start with the verdict, not with section 1 of 12.
-- **Don't accept "marketing-grade" numbers.** "68.8% win rate" from a vendor tweet is not the same as a 55% win rate from a peer-reviewed backtest.
+- **Don't accept "marketing-grade" numbers.** A "95% success rate" from a vendor's own blog is not the same as a result independently measured under realistic conditions.
 - **Don't write code unless asked.** Default to research mode.
 - **Don't over-engineer for tiny scope.** A 200-line codebase doesn't need 6 specialists. Use 2–3 lanes.
 

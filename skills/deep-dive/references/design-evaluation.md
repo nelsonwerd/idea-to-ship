@@ -80,7 +80,7 @@ Specific things to flag:
 - File path or naming ambiguity
 - Order dependencies between prompts that aren't stated
 
-This is the lane that caught the "Codex modifies the wrong sizer" bug in the Trader project. It's specific to instructional / agentic designs.
+This lane is specific to instructional / agentic designs — where the "reader" is another agent that will act on the text. Example failure it catches: a prompt that says "update the config" when two different files could plausibly match, so the agent edits the wrong one.
 
 ## Synthesis output for design evaluations
 

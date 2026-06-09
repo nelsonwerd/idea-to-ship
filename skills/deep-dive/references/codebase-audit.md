@@ -6,15 +6,15 @@ Use when the user asks to audit, review, or analyze a code repository — partic
 
 Deploy these in parallel as a single batch. Pick 4–6 based on what the codebase actually contains.
 
-### Lane 1: Strategy / business logic deep dive
-For projects with non-trivial domain logic (trading, optimization, ML, etc.). The agent audits whether the logic actually implements the spec or design intent, looks for silent bugs (lookahead, off-by-one, repaint, data leakage), and assesses whether the logic has a real chance of working.
+### Lane 1: Core / business logic deep dive
+For projects with non-trivial domain logic (pricing, scheduling, matching, ML, optimization, billing, etc.). The agent audits whether the logic actually implements the spec or design intent, looks for silent bugs (off-by-one, state leakage, data leakage, wrong ordering), and assesses whether the logic has a real chance of working.
 
 Specific things to flag:
 - Spec compliance per line of the design document
-- No-lookahead enforcement (uses closed/completed data only)
-- Edge cases (warmup, ambiguous states, restart behavior)
+- No use of data that wouldn't be available at decision time (decisions use only information present at that point)
+- Edge cases (cold start, ambiguous states, restart/resume behavior)
 - Parameter sensitivity / knife-edge thresholds
-- Honest assessment of whether the strategy/logic has a chance of working
+- Honest assessment of whether the logic has a chance of working
 
 ### Lane 2: Architecture and code quality
 The agent reviews module boundaries, dependency graph, abstractions, decimal/float discipline, error handling, code quality red flags (file sizes, test ratios, duplication).
@@ -27,37 +27,37 @@ Specific things to flag:
 - Maintainability for future contributors
 
 ### Lane 3: Risk / safety / kill switches
-For projects touching money, safety, or production systems. The agent audits the risk engine, kill switch, drawdown control, live deployment gates, fail-closed behavior.
+For projects touching money, safety, or production systems. The agent audits the risk controls, kill switch, circuit breakers, deployment gates, fail-closed behavior.
 
 Specific things to flag:
 - Every required limit implemented and enforced (not just computed)
 - Live gates actually enforced in code, not just documented
 - Fail-closed behavior on every failure mode (data, network, storage)
 - Secret handling
-- Catastrophic failure modes (multiple instances, exchange outages, fat-finger configs)
+- Catastrophic failure modes (multiple instances running at once, dependency outages, misconfiguration)
 
-### Lane 4: Data / execution layer
-For projects that ingest external data or interact with exchanges/APIs. The agent audits data ingestion, normalization, order validation, paper broker fill model.
+### Lane 4: Data / integration layer
+For projects that ingest external data or interact with third-party APIs/services. The agent audits data ingestion, normalization, input/request validation, and any sandbox or mock used in place of the real service.
 
 Specific things to flag:
 - Correct API endpoints, rate limit handling, backoff
-- Normalization correctness, sequence-gap detection
-- Order validation against exchange filters
-- Fill model honesty — does paper match live behavior?
-- Latency simulation, slippage modeling
-- "Happy assumptions" in simulators that won't hold live
+- Normalization correctness, sequence-gap / missing-data detection
+- Request/input validation against the external service's constraints
+- Sandbox/mock honesty — does the simulated dependency match real behavior?
+- Latency and failure-injection realism
+- "Happy-path assumptions" in simulators that won't hold in production
 
-### Lane 5: Backtester / validation pipeline
-For projects with quantitative validation. The agent audits the backtester, walk-forward, CPCV, metrics, baseline comparisons.
+### Lane 5: Validation pipeline
+For projects whose correctness rests on empirical validation (ML, analytics, simulations, any data-driven system). The agent audits the validation harness, holdout discipline, metrics, and baseline comparisons.
 
 Specific things to flag:
-- Lookahead bias
-- Optimistic fills
-- Friction modeling realism
-- Out-of-sample reservation
-- Multiple-testing correction
-- Baseline comparisons (HODL, always-flat, simple benchmark)
-- How much historical data is actually present (often the silent killer)
+- Use of data unavailable at decision time (information leakage)
+- Optimistic assumptions baked into the simulation
+- Real-world cost / error modeling realism
+- A genuine holdout set reserved and never touched during tuning
+- Multiple-comparisons correction (every parameter combination tested counts)
+- Baseline comparisons (do-nothing, naive / simple benchmark)
+- How much real data is actually present (often the silent killer)
 
 ### Lane 6: Tests / operational readiness
 The agent reviews test coverage and quality, observability, QA checks, deployment readiness, monitoring, runbooks.
@@ -72,20 +72,20 @@ Specific things to flag:
 
 ## Common silent bugs to hunt across all lanes
 
-These are the silent killers that have appeared in multiple real audits:
+These are the silent killers worth hunting in most codebases — a computed safeguard that nothing enforces, a simulation that flatters reality, a test that passes against almost nothing:
 
-1. **Strategy exit logic dead in production paths.** Runner constructs a placeholder position state with hardcoded stops; the strategy's real exit logic never fires.
-2. **Anchored VWAP not actually anchored.** Indicator called without anchor parameter; accumulates from buffer start instead of daily reset.
-3. **Risk engine HALT actions computed but never enforced.** Engine returns HALT_NEW_ORDERS or FLATTEN_AND_HALT; nothing in src/ reads `decision.action`.
-4. **Backtest fees orders-of-magnitude too low.** Config ships with 1 bp taker when reality is 40-60 bps.
-5. **Market lake holds one day of data.** Backtest reports look real but tested against nothing.
-6. **r_multiples or similar metric hardcoded empty.** Sample-size checks silently broken.
-7. **LIMIT_MAKER fills assumed 100%.** No queue position model; once a through-tick occurs, fill is assumed.
-8. **MARKET orders skip latency simulation** while LIMITs respect it. Emergency exits appear faster in paper than live.
-9. **Manual kill switch not consulted in live path.** File exists, code never reads it.
-10. **Process lock missing.** Two simultaneous bot instances architecturally allowed.
+1. **A computed decision nothing enforces.** Code calculates a guard (rate-limit exceeded, permission denied, "should halt/stop") and returns it — but no caller acts on the result. The check exists on paper; the system never actually stops.
+2. **A kill switch / feature flag the live path never reads.** The file, env var, or config exists; the production code path never consults it.
+3. **Money math in floats.** Currency stored or summed as floating point; rounding drift silently corrupts totals. (Decimal/precision discipline missing at boundaries.)
+4. **Retry without idempotency.** A retried request re-runs a side effect — double charge, duplicate email, double write.
+5. **Errors swallowed.** A bare `except:` / empty `catch` turns a failure into a silent success; the caller proceeds on bad or empty data.
+6. **Stale cache after write.** Cache not invalidated on update; the system keeps serving old data that looks current.
+7. **Check-then-act race.** No lock or transaction between "is it available?" and "take it"; two concurrent runs both proceed (double-booking, two instances live at once).
+8. **Off-by-one at a boundary.** Pagination, batch windows, or date ranges that drop or double the edge record.
+9. **Tests pass against almost no data.** Fixtures so small the suite is green while exercising essentially nothing real.
+10. **Time-zone / clock assumptions.** UTC-vs-local, DST, or clock-skew assumptions that quietly produce wrong timestamps, ordering, or scheduling.
 
-Encode these patterns into the specialist prompts as "common silent-bug categories to hunt for."
+Encode the categories relevant to this codebase into the specialist prompts as "common silent-bug categories to hunt for." Add domain-specific ones where the project has non-trivial logic — for a system with its own decision rules, "a safeguard that's computed but never enforced" (#1) is the highest-value pattern to chase.
 
 ## Phase 0 setup for codebase audits
 
@@ -153,4 +153,4 @@ Lead with verdict. Use this structure:
 [One-sentence answer with caveats]
 ```
 
-Plain-English impact statements per finding. The user shouldn't need to know what `r_multiples` is to understand that "the sample-size warning in every backtest is broken."
+Plain-English impact statements per finding. The user shouldn't need to know what a cache key is to understand that "some users have been served stale data for months."

@@ -44,7 +44,7 @@ For research deep dives, source quality matters more than for code audits. Encod
 |---|---|---|
 | Strong | Peer-reviewed papers, replicated studies, large-N datasets, primary regulatory filings | Accept with normal caveats |
 | Medium | Major news outlets, well-cited blog posts, industry reports from credible firms, primary data with documented methodology | Accept if 2+ sources confirm |
-| Weak | Single-source claims, vendor marketing, anonymous Twitter accounts, unreplicated backtests | Treat as hypothesis only; flag for follow-up |
+| Weak | Single-source claims, vendor marketing, anonymous social accounts, unreplicated one-off results | Treat as hypothesis only; flag for follow-up |
 | Discount | Promotional content, undisclosed-methodology claims, viral but unverified posts | Mention but don't weight |
 
 Specialists must categorize their sources. Single-quality-weak claims that materially affect the conclusion must be flagged for follow-up verification.
@@ -72,7 +72,7 @@ Where the literature contradicts itself, present both sides honestly. Do not sil
 
 These are the patterns that should trigger follow-up verification specialists:
 
-1. **Surprising magnitude** — "X has 70% win rate" when peer-reviewed work in the area shows 55%. Verify.
+1. **Surprising magnitude** — a claimed effect far larger than what established work in the area shows. Verify.
 2. **Single-source headline number** — one tweet, one vendor blog, one keynote. Verify.
 3. **Recency claim** — "still works in 2024" with no recent data cited. Verify.
 4. **Mechanism unexplained** — claim accepted without theory. Investigate the mechanism.

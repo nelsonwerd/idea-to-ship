@@ -7,7 +7,7 @@ The template is intentionally explicit. Specialist agents are instantiated fresh
 ## Template
 
 ```
-You are one of [N] specialist research agents working on [project / scope summary in 1-2 sentences]. Your lane is [SPECIFIC LANE — e.g., "the strategy logic itself" or "data ingestion, normalization, and paper broker"]. The other [N-1] agents are covering [BRIEFLY LIST OTHER LANES] — stay focused on your lane and do not duplicate their work.
+You are one of [N] specialist research agents working on [project / scope summary in 1-2 sentences]. Your lane is [SPECIFIC LANE — e.g., "the core decision logic itself" or "data ingestion, normalization, and the external-API integration"]. The other [N-1] agents are covering [BRIEFLY LIST OTHER LANES] — stay focused on your lane and do not duplicate their work.
 
 CONTEXT: [2-4 sentences setting the stage. What was built or what is being asked. Where the relevant files live. Any prior research the user has done. Constraints the user has stated.]
 
@@ -66,7 +66,7 @@ Forcing every finding into a tier prevents the common failure mode of "the agent
 
 ### Source verification
 
-The single-most-important rule. Multiple deep dives I've seen failed because a specialist accepted a marketing number (e.g., "68.8% win rate from Hyblock") at face value, weighted it heavily in the synthesis, and only follow-up verification revealed it was a single tweet with no methodology.
+The single-most-important rule. Multiple deep dives I've seen failed because a specialist accepted a marketing number (e.g., a "10x faster" figure from a vendor's own blog) at face value, weighted it heavily in the synthesis, and only follow-up verification revealed it was a single unverified source with no methodology.
 
 ### Confidence with reasoning
 
@@ -93,8 +93,8 @@ Add to "EVALUATE":
 
 Add to "EVALUATE":
 - Quantitative effect size with confidence intervals
-- Comparison to baseline (HODL, always-flat, simple benchmark)
-- Honest realistic win-rate after costs (not the marketing number)
+- Comparison to a baseline (the do-nothing / naive-rule alternative)
+- Honest realistic success rate after real-world costs (not the marketing number)
 - "Where does this fail" section
 
 ### For open research questions

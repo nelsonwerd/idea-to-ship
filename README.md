@@ -26,7 +26,9 @@ They're three **separate** skills on purpose — sharp triggers, lean context, i
 Fuzzy idea → locked concept + roadmap. Two modes: **greenfield** (a new idea) and **refinement** (evaluate/improve an existing thing). Triggers: *"help me figure out what to build"*, *"is this idea any good"*, *"should I rebuild X"*, *"turn my idea into a plan"*. → [ideate.skill](https://github.com/nelsonwerd/ideate.skill)
 
 ### 🔬 deep-dive — *investigate it rigorously*
-Multi-agent investigative analysis for questions that deserve more than a one-shot answer: audits, strategy/viability evaluations, design reviews, open research. Triggers: *"do a deep dive"*, *"thorough audit"*, *"evaluate this strategy"*, *"is this profitable/safe"*. → [deep-dive.skill](https://github.com/nelsonwerd/deep-dive.skill)
+Multi-agent investigative analysis for questions that deserve more than a one-shot answer: audits, strategy/viability evaluations, design reviews, open research. Triggers: *"do a deep dive"*, *"thorough audit"*, *"evaluate this strategy"*, *"is this sound/safe"*. → [deep-dive.skill](https://github.com/nelsonwerd/deep-dive.skill)
+
+> **Note — `deep-dive` is token-hungry by design.** A full run fans out 4–6 specialist agents (each writing thousands of words), then synthesis, follow-up verification, a red-team pass, and a briefing — easily 10+ agent calls and tens of thousands of tokens for one analysis. That's the right trade for a high-stakes call, and a great fit on a **Claude Max** plan (or any setup where you're not token-constrained). On a smaller plan, reach for it deliberately: lean on its built-in *Scale heuristics* (2–3 lanes for narrow scope, skip the red-team for low-stakes work), or ask for a single-pass review instead. `ideate` and `prompt-pack` are far lighter.
 
 ### 📦 prompt-pack — *turn it into a shippable plan*
 A big job → ordered, self-contained prompts you run one-per-fresh-chat, plus handoffs. Triggers: *"make a prompt pack"*, *"break this into phases"*, *"I'm running out of context"*, *"write me a handoff"*. → [prompt-pack.skill](https://github.com/nelsonwerd/prompt-pack.skill)

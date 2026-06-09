@@ -1,155 +1,152 @@
-# Strategy Evaluation Variant
+# Strategy / System Evaluation Variant
 
-Use when the user asks to evaluate, audit, or analyze a quantitative trading strategy, betting system, or other formal decision system. Focus is on whether the strategy has real edge and whether the claimed performance is honest.
+Use when the user asks to evaluate, audit, or stress-test a **strategy or formal decision system** — a business or growth strategy, a pricing or bidding scheme, an algorithm, a forecasting/ML model in production, an automation, or any system that makes repeated decisions and claims a measurable payoff. The focus is whether the system has a **real edge** and whether its **claimed performance is honest** once real-world costs and a fair baseline are applied.
+
+This variant is domain-neutral. It covers anything that makes repeated decisions and claims a measurable payoff — "will this growth loop actually compound?", "does this routing algorithm beat the simple rule?", "is this model's reported accuracy real?", a pricing or bidding scheme, or any quantitative decision system. Use the general rigor below and swap in domain specifics where they apply.
 
 ## Recommended specialist lanes
 
 Deploy 4–6 in parallel:
 
-### Lane 1: Multi-timeframe or technical strategy logic
-For chart-based strategies. The agent audits the indicator stack, regime classification, entry/exit rules, parameter sensitivity, and what does/doesn't actually work for the asset class on the relevant timeframes.
+### Lane 1: Core logic / decision rules
+The agent audits the actual decision logic: the inputs, the rules or model, the accept/reject (or enter/exit) conditions, and parameter sensitivity. Does the logic do what the design claims, and is there a plausible mechanism for it to work?
 
 Specific things to flag:
-- Indicator math correctness (Wilder vs EMA smoothing, etc.)
-- Lookahead in rule construction
-- Knife-edge thresholds
-- Parameter stability across regime changes
-- Honest assessment of edge: does this beat always-flat? Does it beat buy-and-hold?
-- Strategies that look profitable but are documented to fail (e.g., RSI mean reversion on 5min crypto)
+- Correctness of the core computation (the method matches the stated intent)
+- Use of information that wouldn't be available at decision time (the system "knows the future")
+- Knife-edge thresholds — does a tiny parameter change flip the outcome?
+- Stability across conditions (does it survive a change in conditions or a different segment, or is it tuned to one slice?)
+- Honest assessment of edge: is there a real reason this beats the naive alternative, or is it curve-fit?
 
-### Lane 2: Microstructure / derivatives signals
-For strategies on liquid markets with derivatives. The agent catalogs and quantifies the predictive value of order flow, funding rates, open interest, cumulative volume delta, basis, options skew, liquidations, exchange flows, ETF flows, cross-venue signals.
-
-Specific things to flag:
-- Which signals have peer-reviewed evidence vs vendor-blog claims
-- Realistic effect sizes (typically much smaller than marketing claims)
-- Post-regime-change persistence (does it still work after ETF launch / institutional adoption / venue migration?)
-- Single-source claims that need verification (the biggest source of overconfidence)
-
-### Lane 3: Execution and venue mechanics
-The agent audits the proposed venue, fee structure, depth of book, maker fill rate reality, slippage assumptions, what existing bots do that the user would be competing against.
+### Lane 2: Evidence for the edge
+The agent catalogs and weighs the evidence that each component actually predicts or improves what it claims. Which claims have strong, independent support vs. a single promotional source?
 
 Specific things to flag:
-- Maker vs taker fee schedules (often the single decisive economic factor)
-- Realistic fill rates (taking quotes at the touch != 100% fill)
-- Toxic flow / adverse selection on the venue
-- Latency reality for retail (always behind co-located MMs)
-- Capacity / what AUM does the strategy break at
-- Regulatory accessibility (some venues are US-restricted)
+- Which claims have peer-reviewed / replicated / independently-measured support vs. vendor-blog or single-anecdote support
+- Realistic effect sizes (usually much smaller than the marketing claim)
+- Persistence after a structural change (does it still hold after the market / platform / user base shifted?)
+- Single-source claims that materially affect the verdict — the biggest source of overconfidence; verify them
 
-### Lane 4: Validation / backtesting methodology
-The agent audits the backtest methodology: lookahead, friction modeling, walk-forward, CPCV, deflated Sharpe, bootstrap CIs, multiple-testing correction. This is the single highest-ROI lane because most strategies die in the backtest-to-live haircut.
+### Lane 3: Real-world execution and costs
+The agent audits what the system costs to actually run, and the gap between the idealized model and reality.
 
 Specific things to flag:
-- Lookahead bias mechanisms
-- Optimistic fill assumptions
-- Friction modeling realism vs actual venue fees
-- Out-of-sample reservation (separate from validation)
-- Multiple-testing correction (every parameter tested counts)
-- Sample-size adequacy
-- Deflated Sharpe vs naive Sharpe
-- Backtest-to-live haircut estimate
+- The real per-decision costs (fees, infra, time, error rate) — often the single decisive economic factor
+- Realistic success/conversion rate vs. the optimistic assumption (perfect execution is rarely real)
+- Adverse conditions the environment imposes (competition, adversarial inputs, latency, throttling)
+- Capacity / scale: at what volume does it stop working? (works small, breaks at the scale you'd actually run)
+- Access constraints (geographic, regulatory, platform-policy)
 
-### Lane 5: Risk management and capital efficiency
-The agent audits position sizing, drawdown control, kill switches, expected drawdown, risk of ruin, capital allocation framework.
+### Lane 4: Validation methodology
+The agent audits how the claimed performance was measured. This is the single highest-ROI lane, because most systems die in the gap between a flattering test and reality.
 
 Specific things to flag:
-- Kelly vs fractional Kelly vs fixed-fractional sizing
-- Drawdown throttling
-- Stop placement (not at known liquidity levels)
-- Risk of ruin calculation
-- Hard caps that cannot be silently bypassed
-- Honest expected max drawdown
+- Information leakage — use of future or otherwise-unavailable data in the test
+- Optimistic assumptions baked into the simulation
+- Real-world-cost modeling vs. the actual costs
+- A genuine holdout reserved and never touched during tuning (separate from the tuning set)
+- Multiple-comparisons correction (every parameter combination tested counts against significance)
+- Sample-size adequacy — enough independent observations to claim the result isn't noise
+- The honest haircut from test conditions to live conditions
+
+### Lane 5: Risk and worst-case
+The agent audits exposure control, worst-case outcomes, and whether a bad run can be catastrophic.
+
+Specific things to flag:
+- Sizing / exposure rules and whether they can be silently bypassed
+- Throttling or circuit-breakers on a losing streak / degraded conditions
+- Honest worst-case (worst-case loss, peak-to-trough decline, blast radius) — not the average case
+- Probability-of-ruin / unrecoverable-failure analysis
+- Hard caps that hold even under operator error or a partial outage
 
 ### Lane 6: Honest baseline comparison
-The agent compares the strategy's projected return/risk to simpler alternatives the user could do instead.
+The agent compares the system's projected benefit to the simplest alternatives the user could do instead — including doing nothing.
 
 Specific things to flag:
-- Passive buy-and-hold of the underlying
-- DCA into the underlying
-- Yield-enhanced HODL (covered calls)
-- Professional managed alternatives (crypto hedge funds, ETFs)
-- Honest decision: when does the strategy win vs lose vs passive?
-- Operator opportunity cost (developer time, monitoring overhead)
-- Do not skip this — most "profitable" strategies still lose to the passive baseline
+- The do-nothing / passive baseline (what happens with no system at all)
+- The naive / simple-rule baseline (a one-line heuristic often captures most of the value)
+- Off-the-shelf or managed alternatives
+- Operator opportunity cost (build + monitoring time vs. the upside)
+- Honest decision: when does the system win vs. lose vs. the baseline?
+- Do not skip this — many "successful" systems still lose to the obvious baseline.
 
 ## The most important rule
 
-**Verify every load-bearing numerical claim.** Strategy evaluations are dominated by "X has Y% win rate" claims. If the source is a single tweet, vendor blog, or unreplicated study, downweight aggressively. Demand 2+ independent confirmations for any number that materially affects the final assessment.
+**Verify every load-bearing numerical claim.** Strategy/system evaluations are dominated by "this gets X% success" or "this lifts Y%" claims. If the source is a single post, a vendor's own blog, or an unreplicated one-off result, downweight aggressively. Demand 2+ independent confirmations for any number that materially affects the final assessment.
 
-The Hyblock-style "68.8% win rate from a single X post" failure mode is the single most common reason deep dives produce overconfident strategy evaluations.
+A single promotional headline number taken at face value is the most common reason these evaluations come out overconfident.
 
 ## Synthesis output structure
 
-For strategy evaluations:
+For strategy/system evaluations:
 
-1. **TL;DR with honest verdict** — does this work? Is it net-positive after costs? Does it beat the baseline?
-2. **Validated edges** — signals/components with real evidence
+1. **TL;DR with honest verdict** — does this work? Is it net-positive after real costs? Does it beat the baseline?
+2. **Validated edges** — components with real, independent evidence
 3. **Falsified or downweighted claims** — what failed verification
-4. **Realistic expectancy math** — win rate, R:R, fees, expected monthly return, expected drawdown, all post-haircut
+4. **Realistic expectancy math** — success rate, payoff, costs, expected outcome, worst case, all post-haircut
 5. **Comparison to baseline** — explicit
-6. **Risk of ruin** — quantitative
-7. **What would change the verdict** — explicit list of things that would push confidence up or down
+6. **Worst-case / ruin analysis** — quantitative
+7. **What would change the verdict** — explicit list of things that move confidence up or down
 8. **Decision tree** — "Build this if A, don't build if B, build it differently if C"
 
-## The standard confidence ladder for strategy evaluation
+## The standard confidence ladder
 
 Use this calibration explicitly in the executive briefing:
 
-- **1–3/10**: Demonstrably broken or no evidence
-- **4/10**: Plausible mechanism, validation incomplete, will probably lose to baseline
-- **5/10**: Plausible mechanism, partial validation, coin-flip vs baseline after costs
-- **6/10**: Documented edge components, clean execution path, favored to beat baseline in most regimes
-- **7/10**: Multiple independent edge sources combined, validation rigorous, favored to beat baseline over multi-year window — RARE for retail systematic strategies
-- **8/10+**: Essentially nonexistent for retail systematic strategies in 2024+. Reserved for inst-grade work.
+- **1–3/10**: Demonstrably broken, or no real evidence
+- **4/10**: Plausible mechanism, validation incomplete, will probably lose to the baseline
+- **5/10**: Plausible mechanism, partial validation, coin-flip vs. baseline after costs
+- **6/10**: Documented edge, clean execution path, favored to beat the baseline in most conditions
+- **7/10**: Multiple independent edge sources combined, rigorous validation, favored over a long horizon — rare for a self-built system
+- **8/10+**: Reserved for thoroughly-validated, independently-confirmed work. Rare.
 
-Most evaluations land at 4–6. Be honest. The 70%-of-pro-funds-fail-to-beat-HODL stat is the gravitational pull working against everyone.
+Most evaluations land at 4–6. Be honest. The base rate — most clever systems fail to beat the simple baseline once real costs are in — is the gravitational pull working against everyone.
 
 ## Common silent overconfidence sources
 
-These appear in nearly every strategy evaluation:
+These appear in nearly every evaluation:
 
-1. **Vendor / marketing win rates** taken at face value
-2. **Backtest fees set to zero or near-zero** when reality is 40-60 bps
-3. **Optimistic maker fill assumptions** (100% when reality is 35-70%)
-4. **No multiple-testing correction** when 100 parameter combinations were tested
+1. **Marketing / vendor success rates** taken at face value
+2. **Costs set to zero or near-zero** in the test when reality is materially higher
+3. **Optimistic execution assumptions** (100% success/fill when reality is partial)
+4. **No multiple-comparisons correction** when many variants were tried and only the best reported
 5. **Sample size too small** to claim significance
-6. **Survivorship bias** in cited "successful traders" — for every Wynn there are 1000 who blew up
-7. **Selection bias** in time windows — strategy works in 2021-2023 then fails
-8. **Capacity unconsidered** — strategy works at $1k but breaks at $1M
-9. **Long-only bias** — strategy looks good in a bull market, would lose in 2018 or 2022
-10. **Missing the obvious baseline** — strategy returns 30%/yr but BTC returned 70%/yr same period
+6. **Survivorship bias** in cited successes — for every winner shown, the many who tried the same and failed are invisible
+7. **Selection bias in the time/segment window** — almost anything works in *some* window
+8. **Capacity unconsidered** — works at small scale, breaks at the scale you'd actually run
+9. **Favorable-conditions bias** — looks great in the environment it was built in, fails when conditions turn
+10. **Missing the obvious baseline** — the system "wins" but a simpler or passive option would have won by more
 
 The red-team agent's primary job is to surface these.
 
-## Executive briefing for strategy evaluation
+## Executive briefing for strategy/system evaluation
 
-Critical to be brutally honest. The user is trying to allocate capital; soft answers cost them money.
+Be brutally honest — the user is about to commit time or capital, and soft answers cost them.
 
 ```
 ## Bottom line up front
-[Will this work? Will it beat baseline? Honest answer.]
+[Will this work? Will it beat the baseline? Honest answer.]
 
-## Honest probability of net-positive EV after costs
+## Honest probability of net-positive outcome after real costs
 [Number with reasoning]
 
-## Honest probability of beating the passive baseline over 3+ years
-[Number with reasoning — usually much lower than the EV number]
+## Honest probability of beating the simple / do-nothing baseline over the long run
+[Number with reasoning — usually lower than the "does it work at all" number]
 
 ## Validated edge sources
-[What has real evidence]
+[What has real, independent evidence]
 
 ## Falsified or unverified claims
 [What didn't survive verification]
 
 ## Realistic expectancy math
-[Numbers post-haircut: win rate, R:R, trades/day, fees, expected monthly return, max DD]
+[Numbers post-haircut: success rate, payoff, frequency, costs, expected outcome, worst case]
 
 ## Comparison to baseline
-[Specific table: this strategy vs HODL vs covered calls vs T-bills]
+[Specific table: this system vs. do-nothing vs. the simple alternative]
 
 ## Decision tree
 [Build it if X, don't build if Y, build differently if Z]
 ```
 
-The user's job is to read this and make a capital allocation decision. Bury nothing.
+The user's job is to read this and make a commit/allocate decision. Bury nothing.
