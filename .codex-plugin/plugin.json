@@ -6,8 +6,8 @@
     "name": "Drew Nelson",
     "url": "https://github.com/nelsonwerd"
   },
-  "homepage": "https://github.com/nelsonwerd/idea-to-ship",
-  "repository": "https://github.com/nelsonwerd/idea-to-ship",
+  "homepage": "https://github.com/nelsonwerd/idea-to-ship-skills",
+  "repository": "https://github.com/nelsonwerd/idea-to-ship-skills",
   "license": "MIT",
   "keywords": ["ideation", "validation", "research", "planning", "design", "build", "skills"],
   "skills": "./skills/",
@@ -23,6 +23,6 @@
       "Do a deep dive on this codebase before I ship it.",
       "This change is too big for one chat — make me a prompt pack."
     ],
-    "websiteURL": "https://github.com/nelsonwerd/idea-to-ship"
+    "websiteURL": "https://github.com/nelsonwerd/idea-to-ship-skills"
   }
 }

@@ -33,15 +33,15 @@ Each works standalone; run them in sequence for the full idea→ship pipeline.
 ## The three skills
 
 ### 🧭 ideate — *find & validate what to build*
-Fuzzy idea → locked concept + roadmap. Two modes: **greenfield** (a new idea) and **refinement** (evaluate/improve an existing thing). Triggers: *"help me figure out what to build"*, *"is this idea any good"*, *"should I rebuild X"*, *"turn my idea into a plan"*. → [ideate.skill](https://github.com/nelsonwerd/ideate.skill)
+Fuzzy idea → locked concept + roadmap. Two modes: **greenfield** (a new idea) and **refinement** (evaluate/improve an existing thing). Triggers: *"help me figure out what to build"*, *"is this idea any good"*, *"should I rebuild X"*, *"turn my idea into a plan"*. → [ideate-skill](https://github.com/nelsonwerd/ideate-skill)
 
 ### 🔬 deep-dive — *investigate it rigorously*
-Multi-agent investigative analysis for questions that deserve more than a one-shot answer: audits, strategy/viability evaluations, design reviews, open research. Triggers: *"do a deep dive"*, *"thorough audit"*, *"evaluate this strategy"*, *"is this sound/safe"*. → [deep-dive.skill](https://github.com/nelsonwerd/deep-dive.skill)
+Multi-agent investigative analysis for questions that deserve more than a one-shot answer: audits, strategy/viability evaluations, design reviews, open research. Triggers: *"do a deep dive"*, *"thorough audit"*, *"evaluate this strategy"*, *"is this sound/safe"*. → [deep-dive-skill](https://github.com/nelsonwerd/deep-dive-skill)
 
 > **Note — `deep-dive` is token-hungry by design.** A full run fans out 4–6 specialist agents (each writing thousands of words), then synthesis, follow-up verification, a red-team pass, and a briefing — easily 10+ agent calls and tens of thousands of tokens for one analysis. That's the right trade for a high-stakes call, and a great fit on a **Claude Max** plan (or any setup where you're not token-constrained). On a smaller plan, reach for it deliberately: lean on its built-in *Scale heuristics* (2–3 lanes for narrow scope, skip the red-team for low-stakes work), or ask for a single-pass review instead. `ideate` and `prompt-pack` are far lighter.
 
 ### 📦 prompt-pack — *turn it into a shippable plan*
-A big job → ordered, self-contained prompts you run one-per-fresh-chat, plus handoffs. Triggers: *"make a prompt pack"*, *"break this into phases"*, *"I'm running out of context"*, *"write me a handoff"*. → [prompt-pack.skill](https://github.com/nelsonwerd/prompt-pack.skill)
+A big job → ordered, self-contained prompts you run one-per-fresh-chat, plus handoffs. Triggers: *"make a prompt pack"*, *"break this into phases"*, *"I'm running out of context"*, *"write me a handoff"*. → [prompt-pack-skill](https://github.com/nelsonwerd/prompt-pack-skill)
 
 ## How they compose
 
@@ -87,7 +87,7 @@ The skill *format* is portable; some *runtime* features (parallel subagents, pro
 
 ### Option 1 — Claude Code plugin (all three, namespaced)
 ```bash
-/plugin marketplace add nelsonwerd/idea-to-ship
+/plugin marketplace add nelsonwerd/idea-to-ship-skills
 /plugin install idea-to-ship@nelsonwerd
 ```
 Or, in the desktop app's **Code** tab: click **+** next to the prompt → **Plugins** → add this marketplace and install. The skills become `/idea-to-ship:ideate`, `/idea-to-ship:deep-dive`, `/idea-to-ship:prompt-pack` and auto-activate on matching requests (run `/reload-plugins` if they don't appear).
@@ -97,7 +97,7 @@ Or, in the desktop app's **Code** tab: click **+** next to the prompt → **Plug
 ### Option 2 — OpenAI Codex plugin (all three)
 The repo is **also a Codex plugin** (`.codex-plugin/plugin.json`) bundling the same three skills.
 ```bash
-codex plugin marketplace add nelsonwerd/idea-to-ship
+codex plugin marketplace add nelsonwerd/idea-to-ship-skills
 ```
 Then run `/plugins` in Codex → find **idea-to-ship** → **Install** (or use the Codex app's **Plugins** sidebar). The skills are invoked as `@ideate`, `@deep-dive`, `@prompt-pack`.
 
@@ -105,9 +105,9 @@ Then run `/plugins` in Codex → find **idea-to-ship** → **Install** (or use t
 
 ### Option 3 — manual copy (any tool, always works)
 ```bash
-git clone https://github.com/nelsonwerd/idea-to-ship.git
-cp -r idea-to-ship/skills/* ~/.claude/skills/     # Claude Code
-cp -r idea-to-ship/skills/* ~/.agents/skills/     # OpenAI Codex
+git clone https://github.com/nelsonwerd/idea-to-ship-skills.git
+cp -r idea-to-ship-skills/skills/* ~/.claude/skills/     # Claude Code
+cp -r idea-to-ship-skills/skills/* ~/.agents/skills/     # OpenAI Codex
 ```
 No restart needed — use them directly (`/ideate`, `@ideate`, …) or let them auto-activate.
 
@@ -128,9 +128,9 @@ This repo bundles copies of the three as a suite; their canonical standalone rep
 
 | Skill | Repo |
 |---|---|
-| ideate | https://github.com/nelsonwerd/ideate.skill |
-| deep-dive | https://github.com/nelsonwerd/deep-dive.skill |
-| prompt-pack | https://github.com/nelsonwerd/prompt-pack.skill |
+| ideate | https://github.com/nelsonwerd/ideate-skill |
+| deep-dive | https://github.com/nelsonwerd/deep-dive-skill |
+| prompt-pack | https://github.com/nelsonwerd/prompt-pack-skill |
 
 ## License
 
