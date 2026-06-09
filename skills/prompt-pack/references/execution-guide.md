@@ -10,6 +10,7 @@ Use this when the user pastes a pack prompt, or says "run P3 / execute phase C."
 
 ### 2. Verify references against current code
 - Open every file the prompt names and **check the line references against the current code before editing** — code moves between authoring and execution.
+- Run `git status --short`. If a file you're about to edit already has **unrelated** uncommitted changes (a half-finished attempt, a stray edit), stop and report — don't layer your change on top of someone else's in-progress work. A clean-enough tree for the touched files is the precondition for a safe, reviewable diff.
 - If reality disagrees with the prompt (a function moved, an assumption is false, the change is already made), **push back and report** rather than forcing the edit. The prompt's assumptions are hypotheses; the code is truth.
 
 ### 3. Do only the scoped change

@@ -14,6 +14,7 @@ A pack has two layers: **pack-level front matter** (read once) and **N self-cont
 **Created:** <YYYY-MM-DD>
 **Companion docs:** <docs that give full context, e.g. an audit/handoff doc>
 **Platform scope:** <e.g. iOS/SwiftUI + Python backend>
+**Validated against:** commit `<short-hash>` on branch `<branch>` <!-- the tree state this pack was written against; if the executing chat is far ahead, re-verify the Architecture map before trusting line refs -->
 
 <1-2 sentence description of what this pack accomplishes and why it's split up.>
 
@@ -52,7 +53,7 @@ This pack contains **<N> prompts**<, organized into <M> phases>. Feed them back 
 - <Decision 2 ...>
 
 ## Architecture map
-<!-- Key files identified during the read-only deep-dive, so executing sessions don't rediscover them. Use real paths; mark line numbers as "verify before editing." -->
+<!-- Key files identified during the read-only architecture reconnaissance, so executing sessions don't rediscover them. Use real paths; mark line numbers as "verify before editing." -->
 - <Subsystem>: `<path>` — <what it does>
 - <Subsystem>: `<path>` — <what it does>
 
@@ -85,6 +86,7 @@ This is the heart. Every prompt is a self-contained brief. Keep the same section
 - Auto-memory + `CLAUDE.md`/`AGENTS.md`.
 - <Companion doc(s)>.
 - Verify these references against current code before editing: `<file:line>` — <what's there>.
+- `git status --short` on the files below — if any have unrelated uncommitted changes, stop and report.
 
 ## Why this exists / Goal
 <2-4 sentences: the problem, and exactly what this prompt should achieve. Be honest about whether the right answer might be "this is already fine" — the executing chat should push back, not force a change.>

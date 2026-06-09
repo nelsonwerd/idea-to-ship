@@ -56,6 +56,7 @@ This is non-negotiable and stated first because violating it is the most common,
 - Pure factual research with no decision attached → use a research skill.
 - A soundness/quality audit of code or a strategy with no "should I pursue this" question → that's the `deep-dive` skill. (`ideate` judges *worth pursuing*; `deep-dive` judges *is it sound*. For high-stakes validation, `ideate` delegates to `deep-dive` mid-funnel.)
 - Writing or executing build prompts → that's `prompt-pack`. `ideate` stops at the brief.
+- **Routing tie-breaker:** ideate answers *"is this worth building?"* If the real question is *"is this correct / safe / sound?"* on something that already exists, that's a rigorous audit — hand to the `deep-dive` skill if you have it (ideate already delegates heavy validation to it mid-funnel); if you don't, run a lighter honest pressure-test inline and label the gaps. If the concept is already settled and the user just wants the build sequenced, that's `prompt-pack`. When it's genuinely unclear, ask one question: *viability direction, rigorous audit, or execution-planning?*
 
 ## This is an interactive loop, not a one-shot
 
@@ -84,7 +85,7 @@ Detailed moves for each phase live in `references/facilitation-guide.md` and `re
 
 **Phase 1 — Explore (diverge).** Greenfield: generate 5–7 options in one comparable template, rank against the user's criteria, ask which they have *personal pain or insider insight* into, then mine their actual workflow for the wedge. Refinement: narrow, decision-oriented forks (rebuild vs polish, staged vs big-bang) with a recommended default.
 
-**Phase 2 — Pressure-test (the gate).** This is where `ideate` earns its keep. Run the pressure-test battery: honest two-sided assessment with a verdict; competitor buckets; market sizing + unit economics (label cited fact vs your estimate); feasibility tiers; a **red-team / steelman-the-failure** pass; and verify load-bearing claims against real artifacts (run the code, read the repo, check the web). **For high-stakes concepts, delegate the heavy validation to the `deep-dive` skill rather than re-implementing it** (and `deep-research` / market-research skills for demand signals). End with a written verdict (1–10 + named deltas) and a **go / iterate / kill** decision measured against the Phase-0 criterion. Killing or parking is a valid, honest outcome — say so and stop.
+**Phase 2 — Pressure-test (the gate).** This is where `ideate` earns its keep. Run the pressure-test battery: honest two-sided assessment with a verdict; competitor buckets; market sizing + unit economics (label cited fact vs your estimate); feasibility tiers; a **red-team / steelman-the-failure** pass; and verify load-bearing claims against real artifacts (run the code, read the repo, check the web). **For high-stakes concepts, delegate the heavy validation to the `deep-dive` skill if you have it** (otherwise run the pressure-test battery inline). For demand signals, use whatever web/research tool is available; if none, label market-demand claims `[unverified]`. End with a written verdict (1–10 + named deltas) and a **go / iterate / kill** decision measured against the Phase-0 criterion. Killing or parking is a valid, honest outcome — say so and stop.
 
 **Phase 3 — Converge (lock).** Lock decisions one at a time as the user reacts; mark each **LOCKED** in the brief with a one-line rationale (a decision log). Lock: one beachhead persona, the wedge, **scope IN / OUT with deferred items named**, pricing hypothesis, high-level tech approach, the Aha/activation moment, and top risks. **Lock the spine, defer the rest** — never pre-commit a giant downstream roadmap. Surface fuzzy sub-decisions as explicit **decision-forks**, not half-built guesses.
 
@@ -111,7 +112,7 @@ This is the skill's voice. Full battery in `references/facilitation-guide.md`.
 
 The skill's product is a single self-contained `CONCEPT_BRIEF.md`, **edited in place every turn and never regenerated from scratch.** It must stand alone (no reliance on chat memory) because the build happens in other chats and tools.
 
-**Where to save it — so the user can actually see it.** Put the brief *inside the workspace the user has open.* For an existing project: `docs/CONCEPT_BRIEF.md` in that repo. For a brand-new greenfield idea with no repo yet: save it under the **current working directory** (e.g. `./CONCEPT_BRIEF.md`) and **tell the user the exact path.** Never write it to a scratch folder outside their open workspace — it won't appear in their file tree and they won't see it. (Visibility has nothing to do with git; it depends on the file being where the user is looking.)
+**Where to save it — so the user can actually see it.** Put the brief *inside the workspace the user has open.* For an existing project: `docs/CONCEPT_BRIEF.md` in that repo. For a brand-new greenfield idea with no repo yet: save it under the **current working directory** (e.g. `./CONCEPT_BRIEF.md`) and **tell the user the exact path.** Never write it to a scratch folder outside their open workspace — it won't appear in their file tree and they won't see it. (Visibility has nothing to do with git; it depends on the file being where the user is looking.) **If the runtime has no file system the user can browse** (e.g. the Claude app, or a generic chat agent with no workspace), the *chat itself* is the workspace: keep the full brief inline as the canonical copy, reproduce it in its entirety each turn it changes (not a diff), and write a file too if you're able. The rule is unchanged — the brief must live where the user can actually see it.
 
 The full schema is `references/concept-brief-template.md`; the `prompt-pack` handoff contract is `references/handoff-guide.md`.
 
@@ -133,7 +134,7 @@ The full schema is `references/concept-brief-template.md`; the `prompt-pack` han
 |---|---|
 | A quick gut-check on one idea | Run a light Phase 0–2: frame, one honest pressure-test, a verdict. Skip the full brief if the answer is "no." |
 | A real concept the user intends to build | Full funnel → complete `CONCEPT_BRIEF.md` → offer prompt-pack handoff |
-| High-stakes / money-on-the-line validation | Delegate Phase 2 to the `deep-dive` skill; fold its verdict into the brief |
+| High-stakes / money-on-the-line validation | Delegate Phase 2 to the `deep-dive` skill if available (otherwise run the Phase-2 pressure-test inline); fold its verdict into the brief |
 | Re-entry on a moving project | Refinement mode: four-lens reassessment, update the existing brief, re-lock the spine |
 
 The skill scales down gracefully: a fast "is this worth it?" is a light pass; a serious build is the full funnel ending in a handoff.

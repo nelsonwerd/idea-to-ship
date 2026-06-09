@@ -18,7 +18,7 @@ When evaluating anything the user already has a view on (especially refinement):
 
 ## The pressure-test battery (Phase 2)
 
-This is the gate the funnel is built around. Run as many of these as the stakes warrant; for high-stakes concepts, **delegate the heavy version to the `deep-dive` skill** (multi-agent validation + red-team) rather than re-implementing it, and use a research skill (`deep-research`, or a recent-signal skill) for real market demand.
+This is the gate the funnel is built around. Run as many of these as the stakes warrant; for high-stakes concepts, if you have the `deep-dive` skill, delegate the heavy version to it (multi-agent validation + red-team) rather than re-implementing it — otherwise run this battery inline at the depth the stakes warrant. For real market-demand signals, use whatever web/research tooling you have (a dedicated research skill if one's installed, otherwise direct web search); if you have **no** way to check live demand, do a lighter reasoning-based estimate and label every market-demand claim `[unverified]` — never let an estimate read as a cited fact.
 
 1. **Honest two-sided assessment.** Explicit "What's genuinely good / What's risky-or-hard / Verdict." The risky-hard section is what actually de-risks the idea — don't soften it.
 2. **Competitor buckets.** (a) Incumbents who could just add this feature, (b) direct clones, (c) adjacent alternatives. Answer the hard question — "why won't an incumbent just bolt this on?" — don't hand-wave competition.

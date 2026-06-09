@@ -45,6 +45,7 @@ This skill encodes a battle-tested format (refined across many real packs) so ev
 - A small change that fits comfortably in the current chat — just do it
 - A one-line fix or quick question
 - Pure research with no shippable units (use a research/deep-dive skill instead)
+- **An unsettled product idea that hasn't been pressure-tested.** prompt-pack sequences *settled* scope. If the request is really *"is this idea any good / what should I build?"*, that's `ideate` first (see Mode A's brief-check) — sequencing an unvalidated concept just ships a guess faster. A concrete, already-decided code change (a refactor, a migration, a defined feature) needs no brief — proceed.
 
 ## The three modes
 
@@ -64,7 +65,7 @@ These hold across all three modes. They are the difference between a pack that s
 
 1. **Self-contained.** Every prompt assumes the executing chat has *zero* memory of the chat that authored it. It carries its own context, file list, acceptance criteria, and guardrails. If a future session would have to ask "what were we doing?", the prompt has failed.
 2. **One prompt = one chat = one shippable unit.** Don't stack prompts in a chat; don't skip ahead. Each unit leaves the project in a working, shippable state.
-3. **Read-first protocol.** Every prompt opens by reading the project's durable context (auto-memory, `CLAUDE.md` / `AGENTS.md`, named companion docs) and **verifying file:line references against current code before editing** — the codebase moves between when a pack is written and when a prompt runs.
+3. **Read-first protocol.** Every prompt opens by reading the project's durable context (auto-memory, and the repo's durable-context file — `CLAUDE.md` in Claude, `AGENTS.md` in Codex / agent-agnostic setups; read whichever is present, or both — plus named companion docs) and **verifying file:line references against current code before editing** — the codebase moves between when a pack is written and when a prompt runs.
 4. **Risk-rated with explicit guardrails.** Each prompt states a risk level and a **"What MUST NOT change"** list. This is what stops scope creep and silent regressions.
 5. **Verify, every time.** Each prompt ends with exact verification commands plus a manual matrix that covers both a **regression check** (old behavior still works) and the **new behavior** across cases.
 6. **Never commit unless the user explicitly says so.** Each prompt produces local changes only; the user reviews and says go. (See the project's commit conventions — e.g. message format, no co-author trailer — and inherit them into the pack's rules block.)
@@ -75,13 +76,14 @@ These hold across all three modes. They are the difference between a pack that s
 
 Goal: turn a big request into a sequenced, self-contained pack saved to `docs/<TOPIC>_PROMPT_PACK.md`. Full procedure in `references/authoring-guide.md`; the exact fill-in structure is `references/pack-template.md`. In brief:
 
-1. **Deep-dive first (read-only).** Map the real code before planning. Identify every file the job touches and capture them in an **Architecture Map** (with file:line refs) so executing sessions don't rediscover them.
-2. **Lock decisions & scope.** Record the agreed design decisions ("Locked Decisions") and an explicit **"What this pack does NOT cover"** list.
-3. **Phase the work.** Group into phases where each is independently shippable. Write a short **Sequencing Rationale** (why this order; what each phase unblocks).
-4. **Decompose into prompts.** One shippable unit each. For every prompt, fill the **per-prompt anatomy** (Risk · Files · Read-first · Why/Goal · Scope-exact-changes · What MUST NOT change · Tests · Verification · Risk register · Commit message · "When done / do not commit").
-5. **Inherit project conventions.** Pull the build/test commands and the rules block from the project's `CLAUDE.md` / `AGENTS.md` / auto-memory so every prompt is correct for *this* repo.
-6. **Add the closers.** A combined verification matrix (after multiple prompts ship) and a pre-flight checklist the user runs before handing off.
-7. **Save & summarize.** Write the file; tell the user the execution order and how to run it (one prompt per fresh chat, verify, commit, next).
+1. **Check for a settled concept first.** Glance for `docs/CONCEPT_BRIEF.md`. If it exists, read it as the source of truth — its Locked decisions, Scope OUT, and phased roadmap map directly onto this pack's inputs (treat Locked decisions as fixed and Scope OUT as the scope fence). If there's no brief **and** the request is an unsettled product idea rather than a concrete code change, gently offer to validate the concept first — *"This reads like an idea that hasn't been pressure-tested yet. If you have the `ideate` skill, it's worth locking the concept before we sequence the build — want to do that first, or proceed?"* — then do whatever they choose. If they choose to skip validation, note it as a risk in the pack. Do **not** block a concrete, already-decided change (a refactor, a defined feature) — that has settled scope by definition; proceed straight to recon.
+2. **Architecture reconnaissance (read-only).** Map the real code before planning. Identify every file the job touches and capture them in an **Architecture Map** (with file:line refs) so executing sessions don't rediscover them.
+3. **Lock decisions & scope.** Record the agreed design decisions ("Locked Decisions") and an explicit **"What this pack does NOT cover"** list.
+4. **Phase the work.** Group into phases where each is independently shippable. Write a short **Sequencing Rationale** (why this order; what each phase unblocks).
+5. **Decompose into prompts.** One shippable unit each. For every prompt, fill the **per-prompt anatomy** (Risk · Files · Read-first · Why/Goal · Scope-exact-changes · What MUST NOT change · Tests · Verification · Risk register · Commit message · "When done / do not commit").
+6. **Inherit project conventions.** Pull the build/test commands and the rules block from the project's `CLAUDE.md` / `AGENTS.md` / auto-memory so every prompt is correct for *this* repo.
+7. **Add the closers.** A combined verification matrix (after multiple prompts ship) and a pre-flight checklist the user runs before handing off.
+8. **Save & summarize.** Write the file; tell the user the execution order and how to run it (one prompt per fresh chat, verify, commit, next).
 
 ## Mode B — Executing a pack prompt
 
@@ -126,7 +128,7 @@ The skill is portable; the *project-specific* facts (exact build/test commands, 
 - **No verification matrix.** "It builds" is not verification. Require a regression case + the new-behavior cases.
 - **Committing without permission.** Default to local changes; the user gates every commit.
 - **Over-scoping a single prompt.** If a prompt touches many subsystems, split it. One shippable unit.
-- **Skipping the read-only deep-dive when authoring.** Plans written without reading the code produce wrong file lists and wrong sequencing.
+- **Skipping the read-only architecture reconnaissance when authoring.** Plans written without reading the code produce wrong file lists and wrong sequencing.
 
 ## Scale heuristics
 

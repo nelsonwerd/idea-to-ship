@@ -42,8 +42,9 @@ This skill orchestrates rigorous multi-lane analysis for complex investigative t
 - Simple factual questions (one WebSearch is sufficient)
 - Tasks the user has scoped tightly (e.g., "fix this bug" — just fix it)
 - Tasks under ~15 minutes of investigative work (overhead exceeds benefit)
+- **Routing tie-breaker:** deep-dive answers *"is this correct / safe / viable / evidence-backed?"* If the real question is *"what should I build, or is this idea worth pursuing at all?"* — a product-judgment call rather than an evidence audit — that's the `ideate` skill's job if you have it; if you don't, scope this run explicitly to viability evidence and say so. If the scope is already settled and the user just wants the build broken into sequenced steps, that's `prompt-pack`.
 
-When in doubt, prefer to invoke. The skill is designed to scale down gracefully (3 lanes for narrow scope, 6 for broad scope).
+When in doubt, prefer to invoke — but right-size it. The skill scales from a quick 1–2-lane look to an exhaustive 6-lane investigation (see "Scale heuristics and run modes," which also covers the one-line cost heads-up before expensive runs).
 
 ## The four scope variants
 
@@ -63,6 +64,19 @@ If the scope is genuinely ambiguous, ask **one or two** clarifying questions bef
 - "Focus on correctness, performance, or both?"
 
 After the clarification, proceed.
+
+## Environment & fallbacks (run anywhere)
+
+This skill is written for Claude Code, where parallel subagents and a few progress tools exist. **The method is portable; only the orchestration mechanics degrade.** The five stages — parallel/serial **lanes → synthesis → follow-up verification → red-team → executive briefing** — run in any capable agent (Claude Code, the Claude app, OpenAI Codex, or a generic agent). Before Phase 0, check what your runtime supports and substitute the fallback. Never tell the user "this only works in Claude Code" — adapt and run.
+
+| Claude-Code primitive | If unavailable (Codex, a generic agent, or any runtime without it) |
+|---|---|
+| Parallel `Agent` calls in one message (`Phase 1`, `Phase 3`) | **Run the same lanes serially** — one lane at a time, each writing its own markdown file, with the *same* prompts, deliverables, severity tiers, and confidence ratings. Same rigor; longer wall-clock. This is the only acceptable substitute, and serial is **correct** here (see Pitfalls). |
+| `mcp__ccd_session__mark_chapter` (`Phase 0`) | **Skip it.** It's a progress signal, not part of the analysis. |
+| `TaskCreate` task tracking (`Phase 0`) | **Skip it**, or keep a short plain-text checklist in your reply. Progress sugar only. |
+| `WebSearch` / `WebFetch` (`Phase 1`, follow-up) | **Rely on local artifacts** (the repo, files, data the user provided). For any external/numerical claim you cannot verify locally, **label it `unverified — no web access`** instead of asserting it, and say so in the briefing's confidence reasoning. Do not invent sources. |
+
+When lanes run serially, keep each lane's anti-duplication framing ("other lanes cover X, Y — stay in yours") so the serial pass still produces non-overlapping, independent analyses that synthesis can cross-check. In a runtime with no writable file system (e.g. the Claude app), keep each lane's output inline in your reply instead of a file — same lanes, same rigor.
 
 ## The execution loop
 
@@ -125,11 +139,18 @@ Deploy an adversarial reviewer agent that:
 
 Red-team is non-negotiable for high-stakes outputs (anything touching money, safety, or production systems). Skippable only for low-stakes research.
 
-### Phase 5: Patching (when red-team finds Blockers/Highs)
+### Phase 5: Patching (only on fresh, explicit approval)
 
-If red-team produces 5+ recommended edits and they're mostly mechanical (1–5 lines each), deploy a focused patching agent that applies them all, then reports verification (grep counts, word-count delta, ambiguities).
+The skill defaults to research-only (see "Pure research vs. code changes"). Phase 5 is the **one** place it may touch source code, and only after clearing this gate — even if the user authorized an expensive run earlier, that authorized *analysis*, not edits.
 
-If red-team finds structural problems, return to Phase 2 with the new findings.
+Before applying any patch:
+1. **Get fresh, explicit approval to edit code.** A green light for the deep dive is not a green light to patch. Ask plainly — e.g. *"Red-team found N fixes. Want me to apply them to the code, or leave them as recommendations?"* If the original request already said "apply the fixes" / "implement the recommendations," that counts as approval — name it and proceed.
+2. **Run `git status --short`** and show it. If the working tree has unrelated changes, say so and stop until the user confirms it's safe — a deep dive often runs alongside other work, and silent edits create merge nightmares.
+3. **Write a one-paragraph patch plan** naming exactly which files may be touched and the nature of each edit (e.g. "3 mechanical wording fixes in `06-synthesis.md`; no source files"). The user can veto specific files.
+
+Then, if the edits are 5+ and mostly mechanical (1–5 lines each), deploy a focused patching agent that applies only the approved files, and reports verification (grep counts, word-count delta, ambiguities). Touch nothing outside the named files.
+
+If red-team finds structural problems, return to Phase 2 with the new findings (no patching gate needed — that's still research).
 
 ### Phase 6: Executive briefing
 
@@ -140,6 +161,17 @@ Write a final user-facing markdown file (`NN-executive-briefing.md`) that:
 - Provides realistic confidence with explicit reasoning (e.g., "5/10 — components individually sound, combined system unvalidated")
 - Translates technical findings into plain English the user can act on
 - Ends with a prioritized action list (Tier 0 / 1 / 2 / 3) and a clear "should you proceed" answer
+
+**Optional — concept-validation hand-back.** *Only when this deep dive was commissioned to validate a product concept (for example, by the `ideate` skill folding the result back into a `CONCEPT_BRIEF.md`)*, end the briefing with a compact, paste-ready block so the upstream skill can drop it straight into the brief. **Skip this entirely for ordinary codebase/strategy audits — it would be noise.** Reuse the verdict and action list you already produced; this just relabels them in the brief's vocabulary:
+
+````markdown
+### Validation hand-back (for CONCEPT_BRIEF)
+- **Verdict:** go | iterate | kill
+- **Confidence:** N/10 — raise if <delta>; lower if <delta>
+- **Now verified:** <claims this dive confirmed → brief's "Verified">
+- **Still a bet:** <claims that did NOT survive verification → brief's "Still a bet">
+- **Risks / scope changes the brief should absorb:** <one or two lines>
+````
 
 The briefing supersedes the synthesis where corrections from follow-up verification or red-team changed conclusions.
 
@@ -182,7 +214,7 @@ If the user is a non-developer (signaled by phrases like "I'm not a traditional 
 
 Default to pure research mode. The skill produces markdown files only unless the user explicitly asks for code changes ("apply these fixes", "implement the recommendations"). When in doubt, ask: "Pure research, or are code changes in scope?"
 
-This safety default exists because deep dives often run while another agent or developer is concurrently editing the codebase. Silent code edits create merge nightmares.
+This safety default exists because deep dives often run while another agent or developer is concurrently editing the codebase. Silent code edits create merge nightmares. If code changes ARE in scope, they happen only at Phase 5 and only after that phase's explicit approval gate (fresh go-ahead + `git status --short` + a named-files patch plan) — authorizing the deep dive never authorizes edits by itself.
 
 ## File naming conventions
 
@@ -207,7 +239,7 @@ This convention makes the evidence package navigable months later.
 
 ## Pitfalls to avoid
 
-- **Don't deploy specialists serially.** They MUST go out in one batch (single message with multiple Agent calls). Serial deployment burns hours unnecessarily.
+- **Don't deploy specialists serially *when parallel subagents are available*.** In Claude Code they MUST go out in one batch (single message with multiple Agent calls) — serial deployment burns hours unnecessarily. (Exception: runtimes without parallel subagents — e.g. Codex or a generic agent — run the same lanes serially on purpose; see *Environment & fallbacks*. Serial is the correct fallback there, not a mistake.)
 - **Don't skip red-team for high-stakes work.** The synthesis agent is biased toward the specialists' framing; only an adversarial reviewer catches blind spots.
 - **Don't trust single-source numerical claims.** Always flag them for follow-up.
 - **Don't bury the lede.** Executive briefings start with the verdict, not with section 1 of 12.
@@ -215,15 +247,18 @@ This convention makes the evidence package navigable months later.
 - **Don't write code unless asked.** Default to research mode.
 - **Don't over-engineer for tiny scope.** A 200-line codebase doesn't need 6 specialists. Use 2–3 lanes.
 
-## Scale heuristics
+## Scale heuristics and run modes
 
-Adjust depth based on scope:
+Match the run to the scope. Each "mode" below is just a named row of this one table — there is no separate setting to configure. Modes change **breadth** (how many lanes, how long the report), never **rigor**: even a quick run keeps the full method — skepticism, severity tiers, source verification, and honest confidence. "Quick" means fewer lanes, not sloppier lanes.
 
-| Scope | Specialists | Synthesis | Red-team | Follow-up | Briefing |
-|---|---|---|---|---|---|
-| Tiny (single file, narrow question) | 1–2 | Optional | Skip | Skip | Short summary |
-| Small (few modules, focused question) | 3 | Yes | Yes (light) | If needed | Yes |
-| Medium (full codebase or strategy) | 4–5 | Yes | Yes | Usually | Full |
-| Large (multi-domain investigation) | 5–6 | Yes | Yes | Yes | Full + appendices |
+| Mode | Scope | Specialists | Synthesis | Red-team | Follow-up | Briefing | Roughly costs |
+|---|---|---|---|---|---|---|---|
+| **Quick** | Tiny (single file, narrow question) | 1–2 | Optional | Skip | Skip | Short summary | A few minutes; cheap |
+| **Standard** | Small–Medium (few modules → full codebase or strategy) | 3–5 | Yes | Yes | Usually | Full | Many minutes to ~an hour; several agent-runs and a long report |
+| **Exhaustive** | Large (multi-domain investigation) | 5–6 | Yes | Yes | Yes | Full + appendices | Longest; the most agent-runs and the largest evidence package |
 
-The skill scales down gracefully — there's no minimum overhead.
+The skill scales down gracefully — there's no minimum overhead, and no maximum rigor cap when the stakes justify it.
+
+**Cost consent (Standard and Exhaustive only).** Standard and Exhaustive runs are genuinely expensive — multiple agent-runs and a long report. Before launching one, state the plan honestly in one line and get a quick go-ahead — for example: *"This is a standard deep dive: ~4 specialists, synthesis, red-team, and a full briefing — roughly [time]. Good to go? (Say so if you'd rather I keep it quick and narrow.)"* Then proceed at **full rigor** the moment they say go — the off-ramp is there for honesty, not a nudge to shrink a run the stakes justify. **Skip the question — just proceed — when the user already authorized scope** ("be thorough", "exhaustive", "audit this properly", "take as long as you need", "don't worry about cost") or when another skill (e.g. `ideate`) delegated a high-stakes validation here; in those cases state the plan in one line and start. **Quick runs never ask** — just do them. The gate is a one-time launch heads-up, not a per-phase checkpoint: once you have the go-ahead, the full multi-agent loop runs without further prompting. (A long run can therefore involve at most two confirmations: this one to launch, and — only if code edits are in scope — the separate Phase-5 patching gate, which authorizes a different thing: writing to disk.)
+
+**Single-agent runtimes (e.g. Codex).** Where parallel subagents aren't available, "Standard" becomes several **serial** passes instead of one parallel batch — same lanes, same rigor, but materially longer wall-clock. Fold that into the heads-up: warn about **latency and length**, not just breadth (e.g. *"Single-agent here, so this runs as ~4 serial passes — slower, but the same depth. Good to go?"*). Don't silently drop lanes to save time; if the user wants it faster, offer Quick explicitly rather than quietly thinning a Standard run.

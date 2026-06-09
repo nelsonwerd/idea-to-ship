@@ -4,20 +4,23 @@ Use this when the user asks to "make a prompt pack", "break this into prompts/ph
 
 The scaffold to fill is `references/pack-template.md`. This guide is the *process* to fill it well.
 
-## Step 0 — Decide it's worth a pack
+## Step 0 — Decide it's worth a pack, and establish the source of truth
 
 If the work fits comfortably in the current chat and is low-risk, **don't make a pack — just do it**. Packs pay off when the job is large, multi-file, risky, or will outlive one chat's context. (See Scale heuristics in `SKILL.md`.)
 
-## Step 1 — Deep-dive first (read-only)
+Then settle what "settled scope" means here: if a `docs/CONCEPT_BRIEF.md` exists, read it as the source of truth (it was produced upstream — e.g. by the `ideate` skill — and its Locked decisions / Scope OUT / phased roadmap map straight onto this pack). If there's no brief and the request is an *unsettled product idea* rather than a concrete code change, offer `ideate` first if it's available — sequencing an unvalidated concept just ships a guess faster. A concrete, already-decided change (a refactor, a migration, a defined feature) is settled by definition — proceed. (Mode A's step 1 in `SKILL.md` has the exact phrasing.)
+
+## Step 1 — Architecture reconnaissance (read-only)
 
 Do not plan from memory. Read the real code before writing a single prompt.
 
 - Read the project's durable context: auto-memory, `CLAUDE.md`/`AGENTS.md`, and the relevant `docs/`.
 - Trace every file the job will touch. Capture them — with paths and key line numbers — into the **Architecture Map**. This is what stops executing chats from rediscovering the codebase each time.
 - Note the exact, verified build/test commands for this repo (copy into the pack's commands block).
+- Record the commit you're validating against (`git rev-parse --short HEAD`) and the branch — put them in the pack's **Validated against** front-matter line so a later chat can tell if the tree has moved far.
 - Surface invariants and fragile areas (money math, currency, migrations, auth) so prompts can carry the right "What MUST NOT change."
 
-If you skip this step, your file lists and sequencing will be wrong. The deep-dive is the foundation.
+If you skip this step, your file lists and sequencing will be wrong. This reconnaissance is the foundation.
 
 ## Step 2 — Lock decisions and fence scope
 
@@ -61,6 +64,7 @@ Build the **RULES block** and **Build/test commands** from `CLAUDE.md`/`AGENTS.m
 
 - Save to `docs/<TOPIC>_PROMPT_PACK.md`.
 - Tell the user: the execution order, that each prompt goes in its **own fresh chat**, and the verify→commit→next loop. Offer to also write a companion **handoff** (Mode C) if they're relaying to another tool.
+- **(Optional) Offer a status ledger for long packs.** If the pack will be executed across many chats over several days, offer to add a one-line-per-prompt ledger (`docs/<TOPIC>_PROMPT_PACK_STATUS.md`) the user updates as each prompt lands — so any fresh chat can see what's already shipped without reconstructing it from `git log`. Skip it for a small pack (≤3–4 prompts); there it's just overhead.
 
 ## Quality bar (self-check before delivering)
 

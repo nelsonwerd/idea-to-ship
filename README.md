@@ -20,6 +20,16 @@ They're three **separate** skills on purpose — sharp triggers, lean context, i
 
 → **execute** the prompts in Claude Code (or hand them to Codex / another tool).
 
+## Quickstart — try one first
+
+| If you want to… | Type this | You get back |
+|---|---|---|
+| Decide *what* to build | "I have an idea for *X* — help me decide if it's worth building." | `docs/CONCEPT_BRIEF.md` |
+| Investigate something rigorously | "Do a standard design evaluation of *X*. Research-only." | `research/<topic>/` + an executive briefing |
+| Turn settled scope into a build plan | "Make a prompt pack from `docs/CONCEPT_BRIEF.md`." (or "*X* is too big for one chat — make me a prompt pack.") | `docs/<TOPIC>_PROMPT_PACK.md` |
+
+Each works standalone; run them in sequence for the full idea→ship pipeline.
+
 ## The three skills
 
 ### 🧭 ideate — *find & validate what to build*
@@ -39,6 +49,17 @@ A big job → ordered, self-contained prompts you run one-per-fresh-chat, plus h
 - `ideate` **delegates to `deep-dive`** when a concept needs heavy, current-sourced validation, and folds the verdict back into the brief.
 - Each is also fully useful **on its own** — run `deep-dive` to audit a codebase, `prompt-pack` to sequence a refactor, `ideate` to gut-check an idea — without the others.
 
+**Which skill for which question?** (they overlap on "evaluate / plan" — here's the precedence)
+
+| The user is really asking… | Skill | Then |
+|---|---|---|
+| *What should I build? Is this idea worth pursuing?* | **ideate** | locks a `CONCEPT_BRIEF.md`; delegates heavy validation to `deep-dive` mid-funnel |
+| *Is this correct / safe / viable / evidence-backed?* | **deep-dive** | returns a verdict + confidence; if it was validating a concept, hands a block back to `ideate` |
+| *Scope is settled — sequence the build* | **prompt-pack** | reads `CONCEPT_BRIEF.md` if present; offers `ideate` first if the idea is unsettled |
+| *Genuinely unclear* | ask one question | *viability direction, rigorous audit, or execution-planning?* |
+
+These compose, but each also runs alone — install only the one you need.
+
 ## Install
 
 These follow the open **[Agent Skills](https://agentskills.io) standard**, so they work in **Claude *and* OpenAI Codex**. Quick pick by who you are:
@@ -50,7 +71,17 @@ These follow the open **[Agent Skills](https://agentskills.io) standard**, so th
 | **Developer** | OpenAI Codex | copy each `skills/<name>/` into `.agents/skills/<name>/` (in your repo) or `~/.agents/skills/<name>/` (global) → [Codex skills docs](https://developers.openai.com/codex/skills) |
 | **Anyone** | any agent | open any `skills/<name>/SKILL.md` — it's just instructions |
 
-<sub>Menu names/commands drift between versions — linked docs are the source of truth. Claude-specific bits (the `plugin.json` bundle format; deep-dive's parallel-subagent orchestration) don't all carry to Codex; the *methodology* is portable.</sub>
+### Compatibility by skill × runtime
+
+The skill *format* is portable; some *runtime* features (parallel subagents, progress tools, web access) are Claude-Code-native. Each skill still runs everywhere — degraded cells lose mechanics, not method.
+
+| Skill | Claude app | Claude Code | OpenAI Codex | Generic agent |
+|---|---|---|---|---|
+| **ideate** | Strong — concept work; brief kept inline when there's no file tree | **Best** | Strong — with a local workspace for the brief | Works — full method; needs somewhere to keep the brief (file or inline) |
+| **deep-dive** | Works (degraded: no repo/file access; lanes run serially) | **Best** — parallel subagents + web | Strong — same lanes run **serially**, same rigor; external claims labeled *unverified* if no web | Works (degraded: serial lanes, local-only; label external claims *unverified*) |
+| **prompt-pack** | Limited — best for high-level planning/handoffs; weak without repo access | **Best** | **Best** — reads `AGENTS.md`, full repo access | Works — with repo/file access |
+
+<sub>Menu names/commands drift between versions — linked docs are the source of truth. Claude-specific bits (the `plugin.json` bundle format; deep-dive's parallel-subagent orchestration) don't all carry to Codex; the **methodology is fully portable** — `deep-dive` ships an *Environment & fallbacks* section that runs the same lanes serially when subagents aren't available.</sub>
 
 ### Option 1 — manual (simplest, always works)
 ```bash
