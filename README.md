@@ -109,7 +109,7 @@ git clone https://github.com/nelsonwerd/idea-to-ship-skills.git
 cp -r idea-to-ship-skills/skills/* ~/.claude/skills/     # Claude Code
 cp -r idea-to-ship-skills/skills/* ~/.agents/skills/     # OpenAI Codex
 ```
-No restart needed — use them directly (`/ideate`, `@ideate`, …) or let them auto-activate.
+No restart needed in Claude Code (it detects them in-session); **restart Codex** to load skills dropped into `~/.agents/skills/`. Then use them directly (`/ideate`, `@ideate`, …) or let them auto-activate.
 
 > **Updating:** the Claude plugin uses **commit-SHA versioning**, so every push to this repo counts as an update — no version bump to wait on. In **Claude Code**, run `/plugin update` (or turn on auto-update for the marketplace in `/plugin` → **Marketplaces**, and it refreshes at startup). In **Codex**, run `codex plugin marketplace upgrade` or re-install from the plugin browser. Installed manually? `git pull` and re-copy.
 
