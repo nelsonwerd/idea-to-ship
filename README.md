@@ -62,12 +62,12 @@ These compose, but each also runs alone — install only the one you need.
 
 ## Install
 
-These follow the open **[Agent Skills](https://agentskills.io) standard**, so they run in **Claude** and **OpenAI Codex** — grab all three at once as a **plugin**, or drop in individual skills. Pick your setup:
+These follow the open **[Agent Skills](https://agentskills.io) standard**, so they run in **Claude** and **OpenAI Codex** — install all three as a **Claude Code plugin**, drop them into your **Codex skills folder**, or copy individual skills anywhere. Pick your setup:
 
 | You use… | Get all three by… |
 |---|---|
-| **Claude Code** — terminal, the **Code** tab of the Claude desktop app, [claude.ai/code](https://claude.ai/code), or a VS Code / JetBrains IDE | the **plugin** (Option 1), or a manual copy (Option 3) |
-| **OpenAI Codex** — CLI, app, or IDE | the **plugin** (Option 2), or a manual copy (Option 3) |
+| **Claude Code** — terminal, the **Code** tab of the Claude desktop app, [claude.ai/code](https://claude.ai/code), or a VS Code / JetBrains IDE | the **plugin** (Option 1), or a manual copy (Option 2) |
+| **OpenAI Codex** — CLI, app, or IDE | copying the skills into `~/.agents/skills/` (Option 2) |
 | **Claude chat** — the **Chat** tab of the desktop app, or [claude.ai](https://claude.ai) (non-coding use) | uploading each skill's **`.skill`** zip (in this repo root) under **Customize → Skills**. Best for `ideate`; `deep-dive` / `prompt-pack` want repo/file access. |
 | **Any other agent** | pointing it at any `skills/<name>/SKILL.md` — it's just instructions |
 
@@ -94,24 +94,15 @@ Or, in the desktop app's **Code** tab: click **+** next to the prompt → **Plug
 
 > **Already have the skills installed manually?** They still work. To avoid duplicate names, remove the old copies first: `rm -rf ~/.claude/skills/{ideate,deep-dive,prompt-pack}`. (The plugin namespaces its skills, so it won't collide.)
 
-### Option 2 — OpenAI Codex plugin (all three)
-The repo is **also a Codex plugin** (`.codex-plugin/plugin.json`) bundling the same three skills.
-```bash
-codex plugin marketplace add nelsonwerd/idea-to-ship-skills
-```
-Then run `/plugins` in Codex → find **idea-to-ship** → **Install** (or use the Codex app's **Plugins** sidebar). The skills are invoked as `@ideate`, `@deep-dive`, `@prompt-pack`.
-
-<sub>Codex's plugin flow is newer and still evolving — the [official Codex plugins docs](https://developers.openai.com/codex/plugins) are the source of truth for the exact command/UX.</sub>
-
-### Option 3 — manual copy (any tool, always works)
+### Option 2 — copy the skills (any tool, always works — and the Codex path)
 ```bash
 git clone https://github.com/nelsonwerd/idea-to-ship-skills.git
 cp -r idea-to-ship-skills/skills/* ~/.claude/skills/     # Claude Code
 cp -r idea-to-ship-skills/skills/* ~/.agents/skills/     # OpenAI Codex
 ```
-No restart needed in Claude Code (it detects them in-session); **restart Codex** to load skills dropped into `~/.agents/skills/`. Then use them directly (`/ideate`, `@ideate`, …) or let them auto-activate.
+No restart needed in Claude Code (it detects them in-session); **restart Codex** to load skills dropped into `~/.agents/skills/` (Codex also scans a repo-level `.agents/skills/` if you want a skill in one project only). Then use them directly (`/ideate` in Claude; `/skills` or just describe the task in Codex) or let either tool auto-activate by description.
 
-> **Updating:** the Claude plugin uses **commit-SHA versioning**, so every push to this repo counts as an update — no version bump to wait on. In **Claude Code**, run `/plugin update` (or turn on auto-update for the marketplace in `/plugin` → **Marketplaces**, and it refreshes at startup). In **Codex**, run `codex plugin marketplace upgrade` or re-install from the plugin browser. Installed manually? `git pull` and re-copy.
+> **Updating:** the Claude plugin uses **commit-SHA versioning**, so every push to this repo counts as an update — no version bump to wait on. In **Claude Code**, run `/plugin update` (or turn on auto-update for the marketplace in `/plugin` → **Marketplaces**, and it refreshes at startup). For a **copied** install (Codex via `~/.agents/skills/`, or a manual Claude copy), `git pull` and re-copy.
 
 ## Why this exists
 
