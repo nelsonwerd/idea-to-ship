@@ -71,6 +71,7 @@ These hold across all three modes. They are the difference between a pack that s
 6. **Never commit unless the user explicitly says so.** Each prompt produces local changes only; the user reviews and says go. (See the project's commit conventions — e.g. message format, no co-author trailer — and inherit them into the pack's rules block.)
 7. **The pack file is the source of truth.** Save it in the repo (`docs/`) so it survives the chats that consume it. If a session seems confused, point it at the pack.
 8. **Independently shippable order.** Sequence so each phase can ship on its own and earlier prompts unblock later ones. State the sequencing rationale explicitly.
+9. **Build only the gated scope; never fake a gate.** Build *only* the validated/gated scope — never extra breadth to look "complete." If a prompt's gate needs a human or real-world signal you don't have (a real-use test, a taste call, a paste-into-prod check), **STOP and emit the gate** — name what's unverified and who must clear it; never fake it, render a "passed"/inert gate, or build past it. (Detail in `references/execution-guide.md`.)
 
 ## Mode A — Authoring a pack
 
@@ -130,6 +131,7 @@ The skill is portable; the *project-specific* facts (exact build/test commands, 
 - **No verification matrix.** "It builds" is not verification. Require a regression case + the new-behavior cases.
 - **Committing without permission.** Default to local changes; the user gates every commit.
 - **Over-scoping a single prompt.** If a prompt touches many subsystems, split it. One shippable unit.
+- **Rendering a gate you didn't pass.** Over-delivering past a prompt's gated scope and dressing it in "gate passed" / inert-gate language (or a hardcoded "pending") is worse than stopping — it *looks* validated while having skipped the check. If a gate needs a human or real-world signal you don't have, stop and emit it; never fake it.
 - **Skipping the read-only architecture reconnaissance when authoring.** Plans written without reading the code produce wrong file lists and wrong sequencing.
 
 ## Scale heuristics

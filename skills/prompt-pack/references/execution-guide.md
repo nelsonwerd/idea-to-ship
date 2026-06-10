@@ -18,6 +18,7 @@ Use this when the user pastes a pack prompt, or says "run P3 / execute phase C."
 - Implement exactly what "Scope — exact changes" specifies.
 - Honor **"What MUST NOT change"** strictly. Do not refactor adjacent code, rename things, or "improve" beyond the ask.
 - If you discover necessary work outside the scope, **write it down as a follow-up and stop at the original scope** — don't expand the prompt mid-flight. (Note it for a future pack prompt.)
+- **Build only the validated/gated scope — never more to look "complete."** Over-delivering breadth past what the prompt gated is scope creep even when it's impressive. If completion hinges on a gate you can't clear, see *When a gate needs a human you don't have* below.
 - Match existing style; no premature abstractions; minimal comments; no emojis in files.
 
 ### 4. Verify
@@ -40,6 +41,19 @@ A good pack prompt is self-contained. If one isn't — missing files, vague scop
 - Reconstruct what you can from the companion docs and the code.
 - State the gap and your proposed interpretation, and ask one sharp question if a decision is genuinely the user's to make.
 - Then proceed once unblocked. (And consider noting the gap so the pack can be tightened.)
+
+## When a gate needs a human you don't have
+
+Some prompts end on a **gate** — a checkpoint that decides whether this unit (or the next phase) may proceed. Sort it before you build:
+- **Machine-cleared** — the check is something you can actually run here (build green, tests pass, a core flow works headless, axe/Lighthouse clean). Run it; report the result.
+- **Human / real-world-cleared** — passing needs a signal you don't have this session (a real user trying it, a taste/design call, an export pasted into real production code, a next-day survival check).
+
+If a gate is human-cleared and you can't clear it:
+- **STOP and emit the gate.** State what's built, what the gate requires, that it is *not yet cleared*, and who must clear it. That's a complete, honest unit — not a failure.
+- **Never fake it** — don't render a "passed"/inert gate the code never enforces, hardcode a check to a constant, or narrate gate language over scope that skipped the check. A gate dressed as passed is worse than none: it *looks* validated while having skipped the very thing it protected.
+- **Never build past it to look complete.** Ship only what's cleared; leave the rest genuinely gated, and say so.
+
+Discipline on *what* to build is free even when the gate isn't runnable — the failure mode to avoid is over-delivering the scope your own validation forbade, then dressing it in gate microcopy.
 
 ## Reminders
 

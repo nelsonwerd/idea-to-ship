@@ -112,6 +112,10 @@ This is the heart. Every prompt is a self-contained brief. Keep the same section
    - <New-behavior case 1>.
    - <New-behavior case 2 / edge case>.
 
+## Gate — who clears it: machine vs human
+<!-- Optional — include when proceeding past this unit hinges on a checkpoint. Machine-cleared: the Verification commands above settle it (build/tests/headless flow/axe). Human / real-world-cleared: it needs a signal not available in-session (real-use test, taste call, paste-into-prod, next-day survival). If human-cleared, the executing chat STOPS and emits the gate (states what's unverified + who must clear it) and never fakes it, renders a "passed" gate, or builds past it. Omit if the unit has no gate beyond its Verification. -->
+- **Gate:** <what must hold to proceed past this unit>. **Cleared by:** <machine — the Verification above | human — name the real-world signal>.
+
 ## Risk register
 - **Could break:** <what> — **mitigation:** <how to detect/avoid>.
 
@@ -179,6 +183,9 @@ Add `"currency": row.currency` to each row dict literal in the summary lists. Us
 1. `<test command>` — all green.
 2. `<lint command>` — clean.
 3. **Manual matrix:** single-currency account → output unchanged (regression). Mixed-currency data → each row shows its own currency, not the global default.
+
+## Gate — who clears it: machine vs human
+- **Gate:** tests + lint green and the manual matrix holds. **Cleared by:** machine — the Verification commands above; no human/real-world signal needed.
 
 ## Risk register
 - **Could break:** tests that exhaustively assert the row key set — **mitigation:** run tests first, add `currency` to the expected set.
