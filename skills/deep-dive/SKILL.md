@@ -158,7 +158,7 @@ Write a final user-facing markdown file (`NN-executive-briefing.md`) that:
 - Leads with TL;DR and the honest verdict (not buried in section 7)
 - Acknowledges where the work shines genuinely
 - States the critical findings ranked by severity, with file:line refs
-- Provides realistic confidence with explicit reasoning (e.g., "5/10 — components individually sound, combined system unvalidated")
+- Provides realistic confidence with explicit reasoning (e.g., "5/10 — components individually sound, combined system unvalidated"), **and carries the required ground-truth tally** (see *Honest confidence* below): how many load-bearing conclusions rest on externally-checked facts vs. model judgment, with the headline number capped by that ratio
 - Translates technical findings into plain English the user can act on
 - Ends with a prioritized action list (Tier 0 / 1 / 2 / 3) and a clear "should you proceed" answer
 
@@ -189,6 +189,8 @@ Every output ends with 1–10 confidence with explicit reasoning. Norms:
 Avoid marketing-grade numbers. Reject the urge to round up. If two pieces of evidence point to 5/10 and one to 7/10, report 5/10 with the 7/10 source flagged as needing verification.
 
 **The loop catches divergent reasoning, not shared blind spots.** Every stage here — specialists, synthesis, red-team — is the *same model*, so the fan-out surfaces where independent reasoning *diverges*, but it cannot catch an error all of them share (a common prior, a training-data gap, the same misread). So weight claims grounded in **external ground truth you can check** — code you can run, `git`, tests, data, cited sources — above claims resting only on model judgment, and let the final confidence reflect how much of the conclusion stands on the former versus the latter. When a conclusion rests entirely on shared priors with no external check, say so and cap the confidence accordingly.
+
+**Make this explicit, not implicit — every confidence rating must carry a one-line ground-truth tally:** *"N of M load-bearing conclusions are externally verified (code run / `git` / tests / cited sources); the rest rest on model judgment"* — and the headline number is **capped by that ratio.** A polished briefing whose conclusions are mostly model judgment cannot honestly read above the 4–5 band no matter how internally consistent it looks; reserve 6+ for conclusions that mostly stand on checkable ground truth. This converts the caveat above from a sentiment into a required output — and it is doubly important because the briefing's confident presentation is exactly what a reader will over-trust on a high-stakes call.
 
 ### Cross-reference vs. assert
 

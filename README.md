@@ -12,6 +12,8 @@ Most "build with AI" workflows skip the hard half. They jump straight to code �
 
 They're three **separate** skills on purpose — sharp triggers, lean context, independent use — but they compose into one pipeline.
 
+**Who it's for.** Solo and small-team builders who tend to start coding before deciding *what's actually worth building* — working in **Claude** or **OpenAI Codex**. If you've shipped a feature nobody used, rebuilt something and lost the parts that worked, or watched a big change stall halfway, this suite front-loads the discipline that prevents it. Each skill also earns its keep alone. (`deep-dive` is token-hungry by design — see its note below; it shines most when you're not token-constrained, e.g. on a Claude Max plan.)
+
 ## The pipeline
 
 1. **`ideate`** — turn a fuzzy idea (or an existing thing you want to improve) into a *locked* concept + roadmap, captured in one living `CONCEPT_BRIEF.md`. A blunt, honest co-founder: it forces a success metric and a kill criterion, refuses to spec before the concept survives an honest pressure-test, and hands off cleanly to `prompt-pack`.
@@ -29,6 +31,36 @@ They're three **separate** skills on purpose — sharp triggers, lean context, i
 | Turn settled scope into a build plan | "Make a prompt pack from `docs/CONCEPT_BRIEF.md`." (or "*X* is too big for one chat — make me a prompt pack.") | `docs/<TOPIC>_PROMPT_PACK.md` |
 
 Each works standalone; run them in sequence for the full idea→ship pipeline.
+
+<details>
+<summary><strong>See what you actually get back — a worked example</strong> (click to expand)</summary>
+
+**`ideate` → `docs/CONCEPT_BRIEF.md`** *(excerpt — the locked concept + honest verdict, edited in place across the session, not regenerated):*
+
+> - **Confidence verdict:** 7/10 — would move to 8 if 5 target users confirm the triage pain in interviews; down to 4 if they already tolerate shared Gmail.
+> - **One-line promise:** Every client message handled by the right person, fast — without anyone owning a chaotic shared inbox.
+> - **Beachhead persona:** 2–6 person creative/client-service studios. *(Secondary: solo freelancers — not v1.)*
+> - **Success metric:** % of client messages with a clear owner + reply within 1 business day.
+> - **Kill criterion:** If 5 target studios won't try a 2-week pilot, shelve it.
+> - **Scope OUT / deferred:** Outlook, analytics dashboard, mobile app — each named with a one-line reason.
+> - LOCKED: Layer on existing email, don't replace it — lowers switching cost (the wedge).
+
+**`deep-dive` → `research/<topic>/NN-executive-briefing.md`** *(excerpt — verdict-first, after parallel specialists + an adversarial red-team):*
+
+> **TL;DR.** Sound core; one blocker before you ship. **Confidence: 6/10 — 4 of 7 load-bearing findings externally verified (tests + `git`); the rest rest on model judgment.**
+> - **[Blocker]** Currency rounding diverges between server and client — `pricing.ts:142` vs `format.ts:88`.
+> - **[High]** No regression test covers the refund path; a silent change there ships unnoticed.
+> - **Should you proceed?** Fix the blocker, add the refund test, then ship Phase 1.
+
+**`prompt-pack` → `docs/<TOPIC>_PROMPT_PACK.md`** *(excerpt — one self-contained, independently-shippable unit; reads the brief above):*
+
+> **P2 · Add per-currency rounding — Risk: HIGH**
+> **Read first:** `CLAUDE.md`, `docs/CONCEPT_BRIEF.md`, `pricing.ts` — *verify file:line before editing.*
+> **What MUST NOT change:** the public `formatAmount()` signature; existing USD output.
+> **Verification:** `npm test pricing` + manual matrix (regression: USD unchanged · new: JPY 0-decimal, BHD 3-decimal).
+> **When done:** report files changed + test results. **Do not commit — wait for explicit go.**
+
+</details>
 
 ## The three skills
 

@@ -27,7 +27,7 @@ Divergence here is genuinely wide — this is the one phase where blue-sky gener
 
 ## Refinement — existing thing → evaluate / improve
 
-**Triggers:** "evaluate this", "should I rebuild / refactor X", "improve my app", "here's my repo, assess it", "where are we really at?" Note: this is the **more common real entry point** — people re-open the idea space repeatedly mid-project. Treat re-entry as first-class; don't assume a cold start. On re-entry, first **load any existing `docs/CONCEPT_BRIEF.md` and continue editing it** — don't start over.
+**Triggers:** "evaluate this", "should I rebuild / refactor X", "improve my app", "here's my repo, assess it", "where are we really at?" Note: this is the **more common real entry point** — people re-open the idea space repeatedly mid-project. Treat re-entry as first-class; don't assume a cold start. On re-entry, first **load any existing `CONCEPT_BRIEF.md` (in `docs/`, else the repo root) and continue editing it** — don't start over.
 
 ### Phase 0 — Open with the four-lens assessment
 Run these in order, and **give your independent read before asking for the user's own notes** (anti-anchoring):

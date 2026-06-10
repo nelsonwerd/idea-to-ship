@@ -6,9 +6,9 @@
 
 After the locked-in recap, write the brief's final state and offer — verbatim pattern:
 
-> *"Your concept is locked and written to `docs/CONCEPT_BRIEF.md`. Want me to hand this to the **prompt-pack** skill to turn the roadmap into sequenced, self-contained build prompts?"*
+> *"Your concept is locked and written to `<the brief's path — e.g. docs/CONCEPT_BRIEF.md>`. Want me to hand this to the **prompt-pack** skill to turn the roadmap into sequenced, self-contained build prompts?"*
 
-- If **yes** → invoke `prompt-pack` and **explicitly name the brief as its source**. Paste-ready: *"Use the prompt-pack skill (its authoring mode) to build a pack from `docs/CONCEPT_BRIEF.md` — treat the brief's Locked decisions as fixed and its Scope OUT as the scope fence."* Then `ideate`'s job is done.
+- If **yes** → invoke `prompt-pack` and **explicitly name the brief as its source, by its actual path**. Paste-ready: *"Use the prompt-pack skill (its authoring mode) to build a pack from `<the brief's path>` — treat the brief's Locked decisions as fixed and its Scope OUT as the scope fence."* Then `ideate`'s job is done.
 - If the user wants to **relay to another tool** (e.g. Codex) → that's `prompt-pack`'s handoff mode (its Mode C), not `ideate`'s.
 - `ideate` does **not** author build prompts or execute. That separation is the whole point of two skills.
 
@@ -41,7 +41,7 @@ State this plainly so neither skill over-reaches:
 
 ## Where the brief lives
 
-Save it at **`docs/CONCEPT_BRIEF.md`** — the same `docs/` location `prompt-pack` saves packs to, so the concept and its packs sit together and survive the chats that consume them. One intentional location, not the repo root.
+Prefer **`docs/CONCEPT_BRIEF.md`** — the same `docs/` location `prompt-pack` saves packs to, so the concept and its packs sit together and survive the chats that consume them. For a brand-new greenfield idea with no project structure yet, the working-directory root (`./CONCEPT_BRIEF.md`) is an acceptable fallback so the user can actually see the file. `prompt-pack` discovers the brief in either place (and via a shallow glob), and `ideate` names the exact path at handoff — so the two never disagree about where it lives.
 
 ## Resolving decision-forks before handoff
 

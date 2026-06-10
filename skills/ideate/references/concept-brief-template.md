@@ -1,6 +1,6 @@
 # CONCEPT_BRIEF Template
 
-The CONCEPT_BRIEF is `ideate`'s product: one self-contained file that holds the locked concept, the honest verdict, and the phased roadmap. Copy this scaffold to **`docs/CONCEPT_BRIEF.md`** *inside the workspace the user has open* (for a no-repo greenfield idea, save it under the current working directory and tell the user the path — never a scratch folder they aren't viewing). Fill the `<placeholders>`, delete guidance comments, and **edit it in place every turn — never regenerate it from scratch** (and mirror key changes inline so the user can see them).
+The CONCEPT_BRIEF is `ideate`'s product: one self-contained file that holds the locked concept, the honest verdict, and the phased roadmap. Copy this scaffold to **`docs/CONCEPT_BRIEF.md`** *inside the workspace the user has open* (for a no-repo greenfield idea, prefer a `docs/` folder if the workspace can hold one, else the current working directory — and tell the user the path; never a scratch folder they aren't viewing). Fill the `<placeholders>`, delete guidance comments, and **edit it in place every turn — never regenerate it from scratch** (and mirror key changes inline so the user can see them).
 
 Rules that make the brief work:
 - **One file, edited in place.** Each phase reads it first and diffs new decisions into it. Regenerating it loses the decision log and re-opens settled questions.
@@ -20,6 +20,7 @@ Rules that make the brief work:
 - **Codename:** `<placeholder-codename>`  <!-- [required] flagged placeholder until the concept is locked; may differ from public name -->
 - **Mode:** <greenfield | refinement>  <!-- [required] -->
 - **Last updated / current state:** <one line the user refreshes each session; for refinement, the done-vs-not-done reality>  <!-- [required] -->
+- **Validated against:** <git short-commit + date the pressure-test / load-bearing facts were last checked — lets a later chat or `prompt-pack` detect a stale brief>  <!-- [optional but recommended once there's a repo] -->
 - **Confidence verdict:** <N/10> — would move to <higher> if <named delta>; down if <named delta>  <!-- [required] updated as the concept hardens -->
 
 ## The concept
@@ -27,7 +28,7 @@ Rules that make the brief work:
 - **Problem + who feels it:** <2–3 plain bullets; include the founder's insider edge / personal pain>  <!-- [required] -->
 - **Beachhead persona:** <ONE primary target, even if the product serves many; optional named secondary flagged "not v1">  <!-- [required] -->
 - **The wedge / differentiator:** <why this wins; the core idea/data-model *concept* in plain English, NOT a schema>  <!-- [required] -->
-- **Market evidence:** <cited external data — label [cited] vs [estimate]>  <!-- [optional] -->
+- **Market evidence:** <prefer the user's own inputs + any [cited] external data; an [estimate] only with its reasoning shown — never a bare fabricated figure>  <!-- [optional] -->
 - **Competitive landscape:** <buckets: incumbents who could add it / direct clones / adjacent — and why we win anyway>  <!-- [optional; required if pressure-test surfaced incumbents] -->
 - **Monetization / sustainability model:** <how it stays alive — a pricing hypothesis if commercial; "free / OSS / internal / grant-funded / personal" if not>  <!-- [optional — only when there's a business or sustainability question; do not force a price onto a non-commercial concept] -->
 
