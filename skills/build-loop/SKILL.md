@@ -47,7 +47,7 @@ This skill is the downstream partner to `prompt-pack` (which sequences *what* to
 The honest bounds are load-bearing — they're stated here, up front, so no one reads a green loop as more than it is.
 
 - **Catches (objective, trustworthy ground truth):** broken builds, failing tests, dead/half-wired flows, console errors, a control that doesn't actually change its output, missing-asset/404s, contrast and other `axe`-checkable a11y violations, blown performance budgets. These are *machine-checkable* — this is the part that moves a rudimentary scaffold toward near-finish-line craft.
-- **Soft on (self-graded taste):** a model screenshotting its own UI and calling it "tasteful" is the monoculture, at the visual layer. The loop reliably flags *ugly/broken*; it is unreliable on *genuinely good*. The optional different-model critic (below) blunts this — but two correlated models still aren't a user.
+- **Soft on (self-graded taste):** a model screenshotting its own UI and calling it "tasteful" is the monoculture, at the visual layer. The loop drives design *hard* toward a stated bar and reliably flags *ugly/broken/missing*; it stays unreliable on *genuinely good*. The different-model critic (default when design is load-bearing) blunts this, but two correlated models still aren't a user — **a human spot-check is the final taste gate** ("looks good to two models" ≠ "a designer signed off").
 - **Cannot see (the last-mile tail — plan for a human to finish it):**
   - **Content wrong against a source of truth it doesn't hold** — e.g. a value marked "invalid" that is actually valid in the target dictionary. The build is green, the flow works, the screenshot looks fine, and the content is still wrong. Without the external oracle, the loop has no way to know.
   - **Subtle correctness/security defects with no failing check** — a race, an auth edge, an off-by-one that no test exercises.
@@ -60,7 +60,7 @@ If a defect lands in "cannot see," the loop's job is to **name it and hand it of
 
 You cannot loop without a target; a loop with no criteria either thrashes forever or stops arbitrarily. **Before iterating, lock:**
 1. **Acceptance criteria** — binary, checkable statements of "done" (a machine or a scripted flow can settle each). Detail + examples in `references/acceptance-criteria.md`.
-2. **The design bar — conditionally.** If experience/feel is load-bearing to this product (cf. `ideate`'s conditional-design forcing-function), carry an explicit design direction + design acceptance criteria, and compose `frontend-design` for the direction. If it's a plain utility, the bar is **plain-but-clear** — say so and don't gold-plate it.
+2. **The design bar — conditionally.** If experience/feel is load-bearing to this product (cf. `ideate`'s conditional-design forcing-function), carry a **substantive** design direction from the brief — target aesthetic/vibe, 1–2 reference points, key design principles, the intended "feel" — plus concrete design acceptance criteria, and compose `frontend-design` for the direction + craft. When it's load-bearing the **visual design loop is mandatory and runs every iteration** (step 2) — a passing unit test never substitutes for it. If it's a plain utility, the bar is **plain-but-clear** — say so and don't gold-plate it.
 
 If these don't exist yet, write them first (or pull them from the `CONCEPT_BRIEF.md` / pack). No criteria → no loop.
 
@@ -69,19 +69,19 @@ If these don't exist yet, write them first (or pull them from the `CONCEPT_BRIEF
 Run this cycle each iteration. The detailed per-step playbook — exact invocations, what to look for, how to score — is in `references/loop-procedure.md`.
 
 1. **Build & test** — run the project's own build, type-check, and unit/integration tests via `bash`. Capture exit codes and pass counts as ground truth. **A red build is iteration 0's only job** — get it green before anything else; you can't see or exercise what won't run.
-2. **See** — launch the app, headless-screenshot the rendered UI at representative viewport(s), and judge it via vision against the design bar (hierarchy, spacing, contrast, alignment, state coverage). Capture console errors/warnings — a noisy console is a signal.
+2. **See — the design-critique pass.** Render the *running* UI and critique it. **When design is load-bearing this is mandatory and runs every iteration — a unit/coupling test never substitutes for it.** Prefer an **interactive renderer** you can click and play with (Preview MCP: `preview_start`/`preview_screenshot`/`preview_click`/`preview_fill`/`preview_console_logs`; or Claude-in-Chrome; or computer-use); the always-available fallback is a **Playwright** script that launches the app and screenshots it. Capture the **key states** (empty/loading/error/hover/focus/filled) across **≥2 viewports** (mobile + desktop); critique against (a) the brief's design direction and (b) general craft — hierarchy, spacing/rhythm, typography, color + contrast, motion/interaction feel, state coverage, responsiveness, polish — and emit **design defects with severity**, like machine defects. Compose `frontend-design` for *how to make it good*, not just to flag bad. Capture console errors too. **No renderer? Report the visual loop NOT RUN** (the design bar is unmet for a load-bearing build) — never fake it. Full checklist + exact tool invocations: `references/design-critique.md`.
 3. **Exercise** — drive the core flows headless (Playwright or equivalent): click, fill, navigate; assert each flow completes end-to-end. Critically, assert **control→output coupling** — drive each input and confirm the output it claims to govern actually changes (this is how you catch a slider wired to nothing).
 4. **Check** — `axe` for a11y (contrast/focus/roles), Lighthouse for performance budgets, and a scan for broken assets/links.
 5. **Critique** — turn the above into a **defect list with severity** (Blocker / High / Medium / Low) and the acceptance criterion each one blocks. Every entry points at a checkable signal or a named criterion — **no vibes.** (Optionally, fold in the different-model critic's findings — below.)
-6. **Rebuild** — fix the **top** defects only; don't refactor adjacent code or gold-plate. Then re-enter at step 1.
+6. **Rebuild** — fix the **top** defects only, drawn from **both tracks** (machine defects AND design defects); don't refactor adjacent code or gold-plate. Then re-enter at step 1.
 
-Keep a **per-iteration ledger** of the objective signals (build exit, test pass count, flows passing, console-error count, a11y-violation count). That ledger *is* the craft-delta evidence and what you report at the end — not "it looks better."
+**Every iteration advances two co-equal tracks** — (i) the objective machine facts (build/test/flows/console/a11y) and (ii), when design is load-bearing, the design bar. Neither substitutes for the other: green machine facts never excuse a skipped design loop, and a pretty screenshot never excuses a red test. Keep a **per-iteration ledger** carrying both — the objective signals (build exit, test pass count, flows passing, console-error count, a11y-violation count) **and** a design column (design-bar criteria met / design defects open). The objective signals are ground truth; the design column mixes checkable items (states present, contrast, responsiveness) with self-graded taste — keep the soft part labeled. That ledger *is* the craft-delta evidence you report — not "it looks better."
 
 ## The stop-condition (no infinite thrash)
 
 Stop and report the moment **any** of these fires:
 
-- **PASS** — all acceptance criteria met and build/tests green. (Success — hand off.)
+- **PASS** — all acceptance criteria met, build/tests green, **and (when design is load-bearing) the design bar met via the visual loop** — not a green build/test alone. (Success — hand off.)
 - **PLATEAU** — craft-delta below threshold for **2 consecutive iterations**, where "below threshold" means *no new acceptance criterion passed AND no defect of severity ≥ Medium closed.* (Diminishing returns — hand off what's left.)
 - **BUDGET** — the iteration cap is reached (**default 5**; the caller may set it). This is the hard backstop.
 - **BLOCKED** — the next defect needs a human or real-world signal the loop can't get (a taste call, an external-oracle/content check, a paste-into-production test). **STOP and emit it** as a human gate — carrying `prompt-pack`'s execute-discipline: never fake it, render a passed-looking result, or build past it to look complete.
@@ -90,11 +90,11 @@ Stop and report the moment **any** of these fires:
 
 Always report **which condition fired** and the **before/after on the objective ledger** — so the caller sees the actual craft-delta, not a vibe.
 
-## The optional different-model critic (recommended — but the loop runs without it)
+## The different-model critic (default when design is load-bearing; optional for plain utilities)
 
 The builder grading its own taste is a monoculture at the visual layer. A critic running a **different model**, handed **only** the screenshots + acceptance criteria + design bar (blind to the builder's own rationale), surfaces taste/quality judgments the builder shares with itself and can't see. Fold its defects into step 5's critique.
 
-**Modularity is locked:** the loop runs **fully without** the critic — the objective signals (build/test/flows/console/a11y) don't need a second model. The critic is an **enhancement layered on the taste step, never a dependency**, and never gates the objective signals. Be honest about its limit: even with it, you have two correlated models, not a user — still soft on *genuinely good*, still zero market signal.
+**Modularity is locked:** for a **plain utility** the critic is optional and the loop runs **fully without** it — the objective signals (build/test/flows/console/a11y) never need a second model. When **design is load-bearing**, run the critic **by default** as the taste check — but it stays an enhancement on the design track, never a gate on the objective signals, and never a substitute for actually rendering the UI. Honest limit: even with it you have two correlated models, not a user — the **human spot-check is the final taste gate**; still zero market signal.
 
 ## Environment & fallbacks (run anywhere)
 
@@ -103,7 +103,7 @@ The method is portable; only the tooling degrades. Substitute the fallback and *
 | Capability | If unavailable |
 |---|---|
 | `bash` build/test | Core — if you can't build/test, you can't loop; stop and say so. |
-| Headless screenshot + vision (*see*) | Skip the *see* step; the loop runs on build/test/exercise/check signals only. Note the gap; don't fake a visual pass. |
+| Render + screenshot (*see*) | Prefer an interactive renderer (Preview MCP / Claude-in-Chrome / computer-use); else a Playwright screenshot script. If **none** can run: report the visual loop **NOT RUN** — and when design is load-bearing the design bar is unmet, so you cannot PASS; never fake it. For a plain utility, proceed on the objective signals and note the gap. |
 | Playwright/headless (*exercise*) | Fall back to whatever drives the surface — run the CLI, call the API, hit the endpoint — and assert outputs. Skip only if there's genuinely no exercisable surface. |
 | `axe` / Lighthouse (*check*) | Skip the a11y/perf checks; report them as not run. |
 | Different-model critic | Run the loop without it (it's optional by design). |
@@ -113,6 +113,8 @@ The method is portable; only the tooling degrades. Substitute the fallback and *
 ## Pitfalls to avoid
 
 - **Looping with no acceptance criteria** — guarantees thrash or an arbitrary stop. Lock the target first.
+- **Substituting a unit test for the visual loop when design is load-bearing** — a green programmatic check is *not* a design pass. If feel is load-bearing, render + screenshot + critique the real UI every iteration, or report the visual loop NOT RUN. (This is the exact shortcut a proof run took once — don't repeat it.)
+- **One-shot design instead of iterated** — judging the UI once and never again. The design bar is advanced every iteration alongside the machine facts, not eyeballed at the end.
 - **Treating self-graded "looks good" as a pass** — it's the monoculture. Pass on objective signals; let the critic + a human handle taste.
 - **Faking a signal you couldn't run** — a skipped check is reported skipped, never green.
 - **Reinventing the harness** — compose the existing tools; if you find yourself writing a bespoke test-runner/agent framework, stop (that's not this skill).
@@ -126,7 +128,7 @@ The method is portable; only the tooling degrades. Substitute the fallback and *
 |---|---|
 | A tiny change that just needs to compile | One pass: build + test, eyeball. No full loop. |
 | A fresh scaffold or feature (plain utility) | Full loop, N≈3–5, acceptance criteria; design bar = plain-but-clear. |
-| A build where feel **is** the wedge | Full loop + the different-model critic + a flagged human spot-check on taste; explicit design bar (compose `frontend-design`). |
+| A build where feel **is** the wedge | Full loop with the **visual design loop every iteration** (render → screenshot key states × viewports → critique) + the different-model critic **by default** + a flagged human spot-check as the final taste gate; substantive design bar (compose `frontend-design`). |
 | A non-browser CLI/library/backend | Build/test + targeted exercise; skip *see*; objective signals only. |
 
 The loop scales down to a single build/test pass and up to a multi-iteration, critic-augmented drive — but the discipline is constant: a checkable target, an honest ledger, a stop-condition, and a clean hand-off of the tail it cannot see.

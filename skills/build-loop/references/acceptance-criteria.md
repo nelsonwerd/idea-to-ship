@@ -32,10 +32,10 @@ Organize the target into buckets the loop can run directly:
 
 Carry `ideate`'s conditional-design forcing-function straight through:
 
-- **If experience/feel is load-bearing** (it *is* the wedge — a motion tool, a delightful consumer app): write an explicit design direction + design acceptance criteria, and make them **as checkable as you can** — a reference comp to match, an explicit spacing scale and type hierarchy, contrast ratios, required empty/loading/error states, motion specifics. Compose `frontend-design` for the direction. The more you can turn taste into a named, checkable rule, the less the loop has to lean on self-graded vision.
+- **If experience/feel is load-bearing** (it *is* the wedge — a motion tool, a delightful consumer app): carry a **substantive design direction** from the brief — target aesthetic/vibe, 1–2 reference points, key design principles, the intended "feel" — plus **design acceptance criteria** made **as checkable as you can** (a reference comp to match, an explicit spacing scale and type hierarchy, contrast ratios, required empty/loading/error states, motion specifics). Compose `frontend-design` for the direction + craft. The more you turn taste into a named, checkable rule, the less the loop leans on self-graded vision. When load-bearing, the **visual design loop is mandatory and runs every iteration** (see `design-critique.md`), and the design bar is **part of PASS** — a green build/test alone is not done.
 - **If it isn't** (a plain utility, an internal tool): the bar is **plain-but-clear** — legible, consistent, no broken layout. **Say so explicitly and don't gold-plate it.** Over-investing polish in a utility is its own failure.
 
-Even with a sharp design bar, the residue of taste the loop self-grades stays soft (see the SKILL's bounds) — that's what the optional different-model critic and a human spot-check are for.
+Even with a sharp design bar, the residue of taste the loop self-grades stays soft (see the SKILL's bounds) — that's what the different-model critic (default when load-bearing) and the final human spot-check are for.
 
 ## Name the tail you can't check — up front
 

@@ -40,7 +40,7 @@ This is the gate the funnel is built around. Run as many of these as the stakes 
 - **Converge by elimination.** Force the explicit "what would you NOT do for v1" list — it's often clearer than what to include.
 - **Decision-forks.** When a sub-decision is fuzzy (pricing model, a tricky feature's behavior), surface it as an explicit binary to resolve now — don't let it leak into the roadmap half-built.
 - **Lock the spine, defer the rest.** Resist the urge to pre-commit a giant roadmap. Lock the first verifiable phase; name (don't detail) what's deferred.
-- **Lock how load-bearing experience/feel is.** Design rigor scales with the concept: if feel *is* the wedge (a motion/design tool, a delightful consumer app), lock a **design direction** + **design acceptance criteria** in the brief and compose a design skill (e.g. `frontend-design`) at build time; if it's a plain utility, **say so — plain-but-clear is correct**, don't gold-plate it.
+- **Lock how load-bearing experience/feel is.** Design rigor scales with the concept: if feel *is* the wedge (a motion/design tool, a delightful consumer app), lock a **substantive design direction** — target vibe, 1–2 reference points, key principles, the intended "feel" — + **design acceptance criteria** in the brief (compose `frontend-design` to articulate it), so `build-loop` has a real target to iterate its visual loop against; if it's a plain utility, **say so — plain-but-clear is correct**, don't gold-plate it.
 
 ## Naming discipline
 

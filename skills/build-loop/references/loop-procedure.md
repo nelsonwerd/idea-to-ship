@@ -11,30 +11,31 @@ A red build blocks everything downstream — you can't *see* or *exercise* what 
 
 ## The per-iteration ledger (record every iteration)
 
-Capture these objective signals each pass. This is your craft-delta evidence and your final report — and it maps directly onto how a proof run (or a caller like `autopilot`) judges the loop:
+The ledger has **two co-equal tracks** — objective machine facts and (when design is load-bearing) the design bar. Capture both each pass; this is your craft-delta evidence and your final report, and it maps directly onto how a proof run (or a caller like `autopilot`) judges the loop:
 
-| Signal | How | Ground truth? |
-|---|---|---|
-| Build exit code | `bash` build command → `$?` | Yes |
-| Test pass count | the project's test runner → "N passed / M total" | Yes |
-| Core flows passing | the headless *exercise* scripts → pass/fail per flow | Yes |
-| Console errors/warnings | captured during *see*/*exercise* | Yes |
-| a11y violations (impact ≥ serious) | `axe` run → count | Yes |
-| Perf budget | Lighthouse score / key metric vs. budget | Yes |
-| Taste/design-bar score | vision critique (+ optional critic) | **No — self-graded** |
+| Track | Signal | How | Ground truth? |
+|---|---|---|---|
+| Machine | Build exit code | `bash` build command → `$?` | Yes |
+| Machine | Test pass count | the project's test runner → "N passed / M total" | Yes |
+| Machine | Core flows passing | the headless *exercise* scripts → pass/fail per flow | Yes |
+| Machine | Console errors/warnings | captured during *see*/*exercise* | Yes |
+| Machine | a11y violations (impact ≥ serious) | `axe` run → count | Yes |
+| Machine | Perf budget | Lighthouse score / key metric vs. budget | Yes |
+| Design | Design-bar criteria met | vs. the brief's design acceptance criteria | Partly — checkable criteria yes; "feels good" self-graded |
+| Design | Design defects open (by severity) | the *see* design-critique (`design-critique.md`) → count | Partly — missing state / overflow / contrast are checkable; pure aesthetic taste is not |
 
-The first six are trustworthy. The seventh is the soft one — keep it in the ledger but never let it be the *only* thing that moved.
+The machine track is ground truth. The design track mixes **checkable** items (states present, no overflow, contrast) with **self-graded** taste — keep the soft part labeled and lean on the different-model critic + a human spot-check for it. **Neither track substitutes for the other:** green machine facts never excuse a skipped design loop, and improving screenshots never excuse a red test. When design is *not* load-bearing, the design rows collapse to a single "plain-but-clear / nothing broken" check.
 
 ## Step 1 — Build & test
 
 - Run build, type-check, unit/integration tests. Quote the summary lines (exit code, "N passed").
 - Treat the exit code and pass count as ground truth — they end debates a screenshot can't.
 
-## Step 2 — See
+## Step 2 — See (the design-critique pass)
 
 - Launch the app (dev server, or serve the static build). Confirm it boots (HTTP 200 / no crash).
-- **Headless-screenshot** the rendered UI at the representative viewport(s) the acceptance criteria name (e.g. mobile + desktop if both matter).
-- **Judge via vision against the design bar** — not "is it pretty" but concrete, nameable issues: hierarchy, spacing rhythm, contrast, alignment, truncation/overflow, empty/loading/error **state coverage**, focus visibility. Write each as a defect, not a vibe.
+- **When design is load-bearing, run the full iterated design critique — every iteration, mandatory.** Render the running UI (interactive renderer preferred — Preview MCP / Claude-in-Chrome / computer-use — else a Playwright screenshot script), capture the key states (empty/loading/error/hover/focus/filled) across ≥2 viewports (mobile + desktop), critique against the brief's design direction AND the craft heuristics, and emit **design defects with severity**. A unit/coupling test does **not** substitute for this. No renderer → report the visual loop **NOT RUN** (design bar unmet for a load-bearing build); never fake it. The full ritual — heuristics checklist, exact tool invocations, the different-model critic, and the human spot-check — lives in **`design-critique.md`**.
+- **For a plain utility**, glance at the rendered UI for "plain-but-clear / nothing broken"; don't gold-plate.
 - **Capture the console.** Errors and warnings are objective signals — a flow that "works" while throwing console errors is not done.
 
 ## Step 3 — Exercise
@@ -52,21 +53,21 @@ The first six are trustworthy. The seventh is the soft one — keep it in the le
 
 ## Step 5 — Critique
 
-- Consolidate everything into one **defect list**, each entry carrying:
+- Consolidate everything into one **defect list spanning both tracks** (machine defects AND design defects), each entry carrying:
   - **Severity** — Blocker / High / Medium / Low (same tiers as `deep-dive`).
-  - **The acceptance criterion it blocks** (or the objective signal it failed).
-  - A one-line, checkable description — points at a signal or a criterion, never "feels off."
-- **Optional different-model critic:** spawn a critic on a *different* model. Give it **only** the screenshots + acceptance criteria + design bar — *not* the builder's rationale (blind review). Ask for a blind score and concrete defects. Merge its defects in. Honest limit: it blunts the monoculture but is still a model, not a user.
-- Pick the **top few defects** (highest severity, most criteria unblocked) for this rebuild. Don't try to fix everything at once.
+  - **The acceptance criterion or design-bar criterion it blocks** (or the objective signal it failed).
+  - A one-line, checkable description — points at a signal, a criterion, or a named design heuristic, never "feels off."
+- **Different-model critic** — **default when design is load-bearing**, optional for a plain utility. Blind review: give it only the screenshots + acceptance criteria + design direction, not the builder's rationale; merge its defects in. Protocol + honest limits in `design-critique.md`. It never gates the machine facts and never replaces rendering the UI.
+- Pick the **top few defects** (highest severity, most criteria unblocked) **from both tracks** for this rebuild. Don't try to fix everything at once.
 
 ## Step 6 — Rebuild
 
-- Fix **only** the selected top defects. Don't refactor adjacent code, rename things, or gold-plate (borrow `prompt-pack`'s scope discipline — a tight diff is reviewable; a sprawling one isn't).
-- Re-enter at Step 1. Re-run the full ledger so the delta is measured, not assumed.
+- Fix **only** the selected top defects (machine and design). Don't refactor adjacent code, rename things, or gold-plate (borrow `prompt-pack`'s scope discipline — a tight diff is reviewable; a sprawling one isn't).
+- Re-enter at Step 1. Re-run the full ledger — both tracks — so the delta is measured, not assumed.
 
 ## Closing an iteration — apply the stop-condition
 
-After the rebuild + re-measure, check the stop-condition (in `SKILL.md`): **PASS / PLATEAU / BUDGET / BLOCKED.** If one fires, stop and report; otherwise loop again. Remember BUDGET (default N=5) is the hard backstop that guarantees termination.
+After the rebuild + re-measure, check the stop-condition (in `SKILL.md`): **PASS / PLATEAU / BUDGET / BLOCKED.** PASS requires **both tracks** — acceptance criteria + build/tests green, and (when design is load-bearing) the design bar met via the visual loop; a green build/test alone is not PASS. If one condition fires, stop and report; otherwise loop again. BUDGET (default N=5) is the unconditional hard backstop that guarantees termination.
 
 ## Handling a "cannot see" defect mid-loop
 

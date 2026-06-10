@@ -50,7 +50,7 @@ Rules that make the brief work:
 
 ## Tech & constraints (high-level only — enough to seed the build, not full schemas)
 - **Tech approach:** <platform, backend, key services/APIs; for existing code, POINT at the repo>  <!-- [required] -->
-- **Design load-bearing? (+ direction if yes):** <is experience/feel central to the value? If YES: the design direction to carry + the design acceptance criteria the build must meet (compose `frontend-design` downstream). If NO: "not load-bearing — plain-but-clear is correct.">  <!-- [required] answer it either way; "no" is a valid, common answer — don't gold-plate a plain utility -->
+- **Design load-bearing? (+ direction if yes):** <is experience/feel central to the value? If YES, give a SUBSTANTIVE direction build-loop can iterate against: target aesthetic/vibe, 1–2 reference points, key design principles, the intended "feel", + concrete design acceptance criteria (compose `frontend-design` to articulate it). If NO: "not load-bearing — plain-but-clear is correct.">  <!-- [required] answer it either way; "no" is a valid, common answer — don't gold-plate a plain utility -->
 - **Hard constraints:** <platform/store rules, regulatory landmines, payment/identity requirements>  <!-- [optional] -->
 - **Core domain primitives:** <units/enums that bite if left unlocked>  <!-- [optional] -->
 - **Source-of-truth rules:** <e.g. "backend is source of truth; client is thin" — become per-prompt tiebreakers downstream>  <!-- [optional] -->
