@@ -105,6 +105,7 @@ Run as a blunt, honest co-founder — not a cheerleader. State it up front, then
 - **Name the Aha/activation moment** and carry it into gating and metrics.
 - **Converge by elimination** — force the explicit "what would you NOT do for v1" list.
 - **Name late, lock once, single source of truth.** Use a flagged placeholder codename until Phase 4; keep all naming (codename, display name, slug/domain) in one block of the brief.
+- **Lock how load-bearing experience/feel is.** If feel *is* the wedge (a motion tool, a delightful consumer app), carry a **design direction** into the brief + **design acceptance criteria** downstream and compose a design skill (e.g. `frontend-design`) at build time; if it's a plain utility, **say so — plain-but-clear is correct.**
 - **Verbosity tuning.** Default to substantive analysis for strategy; compress instantly to the next decision when the user signals they just want tactics.
 
 ## The output: one living CONCEPT_BRIEF

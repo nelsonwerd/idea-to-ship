@@ -50,6 +50,7 @@ Rules that make the brief work:
 
 ## Tech & constraints (high-level only — enough to seed the build, not full schemas)
 - **Tech approach:** <platform, backend, key services/APIs; for existing code, POINT at the repo>  <!-- [required] -->
+- **Design load-bearing? (+ direction if yes):** <is experience/feel central to the value? If YES: the design direction to carry + the design acceptance criteria the build must meet (compose `frontend-design` downstream). If NO: "not load-bearing — plain-but-clear is correct.">  <!-- [required] answer it either way; "no" is a valid, common answer — don't gold-plate a plain utility -->
 - **Hard constraints:** <platform/store rules, regulatory landmines, payment/identity requirements>  <!-- [optional] -->
 - **Core domain primitives:** <units/enums that bite if left unlocked>  <!-- [optional] -->
 - **Source-of-truth rules:** <e.g. "backend is source of truth; client is thin" — become per-prompt tiebreakers downstream>  <!-- [optional] -->
@@ -117,6 +118,7 @@ When `prompt-pack` authors a pack, it pulls directly from this brief (full table
 
 ## Tech & constraints (high-level)
 - **Tech approach:** Web app + a hosted backend + the email provider's API. (No code yet — Phase 1 scaffolds it.)
+- **Design load-bearing?** No — it's a utility; clarity matters but plain-but-clear is correct. The wedge is assignment/status, not visual craft.
 - **Hard constraints:** Email-provider API review/scopes for production access.
 
 ## Validated facts vs assumptions
