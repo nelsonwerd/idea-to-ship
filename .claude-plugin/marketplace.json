@@ -6,7 +6,7 @@
     {
       "name": "idea-to-ship",
       "source": "./",
-      "description": "Three composable skills (Claude + OpenAI Codex) — ideate, deep-dive, prompt-pack — for going from a fuzzy idea to shipped."
+      "description": "Composable skills (Claude + OpenAI Codex) for the idea-to-ship pipeline — a manual tier (ideate, deep-dive, prompt-pack) and an autonomous tier (autopilot, build-loop)."
     }
   ]
 }

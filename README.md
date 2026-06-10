@@ -1,16 +1,18 @@
 # idea-to-ship
 
-**Three composable Agent Skills — for Claude and OpenAI Codex — that take an idea from *fuzzy* → *validated* → *sequenced build* → *shipped*.**
+**Composable Agent Skills — for Claude and OpenAI Codex — that take an idea from *fuzzy* → *validated* → *sequenced build* → *shipped*: by hand, or on autopilot.**
 
-Most "build with AI" workflows skip the hard half. They jump straight to code — and skip *deciding what's actually worth building*, *validating it honestly*, and *planning the build so it ships in safe, verifiable steps*. `idea-to-ship` is that missing front half: a small, sharp suite of Agent Skills (they run in **Claude** and **OpenAI Codex**), reverse-engineered from real idea→ship journeys (including the mistakes those journeys made), so you don't repeat them.
+Most "build with AI" workflows skip the hard half. They jump straight to code — and skip *deciding what's actually worth building*, *validating it honestly*, and *planning the build so it ships in safe, verifiable steps*. `idea-to-ship` is that missing front half — plus the autonomous build loop on the far side of it: a small, sharp suite of Agent Skills (they run in **Claude** and **OpenAI Codex**), reverse-engineered from real idea→ship journeys (including the mistakes those journeys made), so you don't repeat them.
 
 ```
-   ideate              deep-dive             prompt-pack            (you)
- fuzzy idea  ──▶    pressure-test    ──▶    sequenced build   ──▶    execute
-     ╰─────────▶  CONCEPT_BRIEF.md  ──────────▶  build prompts  ────────╯
+   ideate          deep-dive          prompt-pack          build-loop
+ fuzzy idea  ──▶  pressure-test  ──▶  sequenced build ──▶  drive to near-finish
+     ╰────────▶  CONCEPT_BRIEF.md  ──────▶  build prompts  ──────▶  working draft
+
+  MANUAL: you drive each step    ·    AUTONOMOUS: `autopilot` flies the whole line
 ```
 
-They're three **separate** skills on purpose — sharp triggers, lean context, independent use — but they compose into one pipeline.
+They're **separate, composable** skills on purpose — sharp triggers, lean context, independent use. Run them **by hand** (the manual tier), or let **`autopilot`** fly the whole line for you (the autonomous tier).
 
 **Who it's for.** Solo and small-team builders who tend to start coding before deciding *what's actually worth building* — working in **Claude** or **OpenAI Codex**. If you've shipped a feature nobody used, rebuilt something and lost the parts that worked, or watched a big change stall halfway, this suite front-loads the discipline that prevents it. Each skill also earns its keep alone. (`deep-dive` is token-hungry by design — see its note below; it shines most when you're not token-constrained, e.g. on a Claude Max plan.)
 
@@ -19,8 +21,9 @@ They're three **separate** skills on purpose — sharp triggers, lean context, i
 1. **`ideate`** — turn a fuzzy idea (or an existing thing you want to improve) into a *locked* concept + roadmap, captured in one living `CONCEPT_BRIEF.md`. A blunt, honest co-founder: it forces a success metric and a kill criterion, refuses to spec before the concept survives an honest pressure-test, and hands off cleanly to `prompt-pack`.
 2. **`deep-dive`** — the rigor engine `ideate` leans on for high-stakes validation (and that you can run directly on any codebase, strategy, design, or research question): parallel specialist agents → synthesis → adversarial red-team → a plain-English verdict with honest 1–10 confidence.
 3. **`prompt-pack`** — turn a settled concept into a sequence of self-contained, independently-shippable build prompts: each does one unit, verifies itself, and leaves the app working before the next. Run them in one chat or spread across many — each prompt is self-contained, so any unit moves cleanly to a fresh chat whenever you want (or need) one. Also writes paste-ready handoffs to resume a chat or relay work to another tool.
+4. **`build-loop`** — drive a build past *"it compiles"* to **near-finish-line craft**: it *sees and exercises* the running app — render → screenshot → critique → rebuild, multi-pass — and checks the machine facts (build, tests, flows, console, a11y) until acceptance criteria pass or a stop-condition fires (no infinite thrash). When feel is load-bearing the visual design loop runs every iteration. Honest bound: objective craft + a self-graded taste pass, ~80% of the way — not a finished or validated product.
 
-→ **execute** the prompts in Claude Code (or hand them to Codex / another tool).
+→ **drive each step yourself**, or let **`autopilot`** fly the whole line autonomously — in character as a grounded founder-persona — handing back a near-finish-line *first draft* plus an honest ledger of what only a human or the market can finish.
 
 ## Quickstart — try one first
 
@@ -29,8 +32,10 @@ They're three **separate** skills on purpose — sharp triggers, lean context, i
 | Decide *what* to build | "I have an idea for *X* — help me decide if it's worth building." | `docs/CONCEPT_BRIEF.md` |
 | Investigate something rigorously | "Do a standard design evaluation of *X*. Research-only." | `research/<topic>/` + an executive briefing |
 | Turn settled scope into a build plan | "Make a prompt pack from `docs/CONCEPT_BRIEF.md`." (or "*X* is too big for one chat — make me a prompt pack.") | `docs/<TOPIC>_PROMPT_PACK.md` |
+| Drive a build to near-finish-line craft | "Loop on this until the core flows pass and the UI holds its design bar." | a self-verified, iterated build + an honest craft ledger |
+| Fly the whole pipeline autonomously | "Run autopilot on *X*." | a `CONCEPT_BRIEF`, a build pack, a first-draft app + an honest hand-off |
 
-Each works standalone; run them in sequence for the full idea→ship pipeline.
+Each works standalone; run them in sequence — or on autopilot — for the full idea→ship pipeline.
 
 <details>
 <summary><strong>See what you actually get back — a worked example</strong> (click to expand)</summary>
@@ -62,7 +67,9 @@ Each works standalone; run them in sequence for the full idea→ship pipeline.
 
 </details>
 
-## The three skills
+## The skills
+
+**Manual tier — drive each step yourself.**
 
 ### 🧭 ideate — *find & validate what to build*
 Fuzzy idea → locked concept + roadmap. Two modes: **greenfield** (a new idea) and **refinement** (evaluate/improve an existing thing). Triggers: *"help me figure out what to build"*, *"is this idea any good"*, *"should I rebuild X"*, *"turn my idea into a plan"*. → [ideate-skill](https://github.com/nelsonwerd/ideate-skill)
@@ -75,11 +82,25 @@ Multi-agent investigative analysis for questions that deserve more than a one-sh
 ### 📦 prompt-pack — *turn it into a shippable plan*
 A big job → ordered, self-contained prompts, each shippable on its own, plus handoffs. Run them in one chat or across many. Triggers: *"make a prompt pack"*, *"break this into phases"*, *"I'm running out of context"*, *"write me a handoff"*. → [prompt-pack-skill](https://github.com/nelsonwerd/prompt-pack-skill)
 
+**Autonomous tier — the pipeline drives itself.**
+
+> **Honest bound, up front.** The autonomous tier produces a near-finish-line-*aimed* **first draft a human finishes** — not a finished or market-validated product. Three limits it doesn't escape: a **~80% craft ceiling** with a last-mile correctness/security/taste tail; the **grounding firewall** (real data may discover the problem and seed the build, but a synthetic persona's reaction never counts as validation); and judgment quality isn't cleanly measurable — its go/kill calls are a **signal a human weighs**, never proof. Market validation stays the human handoff.
+
+### 🚀 autopilot — *fly the whole pipeline autonomously*
+Runs **ideate → deep-dive → prompt-pack → build-loop** end-to-end, in character as a *grounded* founder-persona — **composing** the manual-tier skills, never reimplementing them. Hands back a `CONCEPT_BRIEF`, a validated build pack, a first-draft product, and an honest ledger of what only a human/market can finish. Carries **execute-discipline** (build only the gated scope; emit a human-only gate, never fake it). Triggers: *"run autopilot"*, *"build this idea→ship autonomously"*, *"fly the whole pipeline end to end"*. *Suite-only — no standalone repo.*
+
+### 🔁 build-loop — *drive a build to near-finish-line craft*
+Loops **build → see → exercise → check → critique → rebuild** over the agent's existing tools (headless screenshot + vision to *see*, Playwright to *exercise*, axe/Lighthouse to *check*) until acceptance criteria pass or a stop-condition fires — no infinite thrash. When feel is load-bearing it runs a **mandatory, multi-pass visual design loop** (render → critique → fix → re-render, every iteration) with a different-model critic as the taste check. Honest bound: it flags *ugly/broken/missing* reliably but stays self-graded on *genuinely good* → a **human spot-check is the final taste gate**; market validation is out of scope. Triggers: *"tighten this build"*, *"iterate until it passes"*, *"self-verify the UI"*. *Suite-only — no standalone repo.*
+
+*An optional `ground` module — real data to seed the persona and the build — is planned; the autonomous tier runs fully without it, and the firewall holds either way.*
+
 ## How they compose
 
 - `ideate` produces a **`CONCEPT_BRIEF.md`** — the single artifact `prompt-pack` consumes to author build prompts. (ideate delivers the *what & why*; prompt-pack derives the *how* from your actual code.)
 - `ideate` **delegates to `deep-dive`** when a concept needs heavy, current-sourced validation, and folds the verdict back into the brief.
-- Each is also fully useful **on its own** — run `deep-dive` to audit a codebase, `prompt-pack` to sequence a refactor, `ideate` to gut-check an idea — without the others.
+- `build-loop` drives any build — from a `prompt-pack` step or on its own — toward near-finish-line craft; it's the craft engine the autonomous tier leans on.
+- `autopilot` **composes all four** (ideate → deep-dive → prompt-pack → build-loop) to fly the whole pipeline autonomously — orchestration only, never reimplementing them.
+- Each is also fully useful **on its own** — run `deep-dive` to audit a codebase, `prompt-pack` to sequence a refactor, `ideate` to gut-check an idea, `build-loop` to tighten a build — without the others.
 
 **Which skill for which question?** (they overlap on "evaluate / plan" — here's the precedence)
 
@@ -88,43 +109,47 @@ A big job → ordered, self-contained prompts, each shippable on its own, plus h
 | *What should I build? Is this idea worth pursuing?* | **ideate** | locks a `CONCEPT_BRIEF.md`; delegates heavy validation to `deep-dive` mid-funnel |
 | *Is this correct / safe / viable / evidence-backed?* | **deep-dive** | returns a verdict + confidence; if it was validating a concept, hands a block back to `ideate` |
 | *Scope is settled — sequence the build* | **prompt-pack** | reads `CONCEPT_BRIEF.md` if present; offers `ideate` first if the idea is unsettled |
-| *Genuinely unclear* | ask one question | *viability direction, rigorous audit, or execution-planning?* |
+| *Does this build actually work + hold a craft bar?* | **build-loop** | loops see/exercise/critique until it passes or a stop-condition fires |
+| *Build the whole thing for me, autonomously* | **autopilot** | flies ideate→…→build-loop in-character; hands back a first draft + an honest ledger |
+| *Genuinely unclear* | ask one question | *viability direction, rigorous audit, execution-planning, or autonomous build?* |
 
 These compose, but each also runs alone — install only the one you need.
 
 ## Install
 
-These follow the open **[Agent Skills](https://agentskills.io) standard**, so they run in **Claude** and **OpenAI Codex** — install all three as a **Claude Code plugin**, drop them into your **Codex skills folder**, or copy individual skills anywhere. Pick your setup:
+These follow the open **[Agent Skills](https://agentskills.io) standard**, so they run in **Claude** and **OpenAI Codex** — install them all as a **Claude Code plugin**, drop them into your **Codex skills folder**, or copy individual skills anywhere. Pick your setup:
 
-| You use… | Get all three by… |
+| You use… | Get them all by… |
 |---|---|
 | **Claude Code** — terminal, the **Code** tab of the Claude desktop app, [claude.ai/code](https://claude.ai/code), or a VS Code / JetBrains IDE | the **plugin** (Option 1), or a manual copy (Option 2) |
 | **OpenAI Codex** — CLI, app, or IDE | copying the skills into `~/.agents/skills/` (Option 2) |
-| **Claude chat** — the **Chat** tab of the desktop app, or [claude.ai](https://claude.ai) (non-coding use) | uploading each skill's **`.skill`** zip (in this repo root) under **Customize → Skills**. Best for `ideate`; `deep-dive` / `prompt-pack` want repo/file access. |
+| **Claude chat** — the **Chat** tab of the desktop app, or [claude.ai](https://claude.ai) (non-coding use) | uploading each skill's **`.skill`** zip (in this repo root) under **Customize → Skills**. Best for `ideate`; the others want repo/file access (and `build-loop`/`autopilot` want the build tools too). |
 | **Any other agent** | pointing it at any `skills/<name>/SKILL.md` — it's just instructions |
 
 <sub>**"Claude Code" and "Claude chat" both live in the one Claude desktop app** — its **Code** tab vs its **Chat** tab (plus their terminal / web / IDE surfaces). Plugins install in Claude Code only; the Chat tab takes uploaded skills under *Customize → Skills*.</sub>
 
 ### Compatibility by skill × surface
 
-The skill *format* is portable; some *runtime* features (parallel subagents, progress tools, web/repo access) are richest in Claude Code and Codex. Each skill still runs everywhere — degraded cells lose mechanics, not method.
+The skill *format* is portable; some *runtime* features (parallel subagents, progress tools, web/repo access, a headless browser) are richest in Claude Code and Codex. Each skill still runs everywhere — degraded cells lose mechanics, not method.
 
 | Skill | Claude chat | Claude Code | OpenAI Codex | Other agents |
 |---|---|---|---|---|
 | **ideate** | Strong — concept work; brief kept inline when there's no file tree | **Best** | Strong — with a local workspace for the brief | Works — full method; keep the brief in a file or inline |
 | **deep-dive** | Works (degraded: no repo/file access; lanes run serially) | **Best** — parallel subagents + web | Strong — same lanes run **serially** (lower cross-agent independence, so confidence is capped); external claims labeled *unverified* if no web | Works (degraded: serial lanes, local-only; label external claims *unverified*) |
 | **prompt-pack** | Limited — best for high-level planning/handoffs; weak without repo access | **Best** | **Best** — reads `AGENTS.md`, full repo access | Works — with repo/file access |
+| **build-loop** | Limited — no headless browser/Playwright; degrades to build/test/static checks (say so) | **Best** — interactive renderers + Playwright + a different-model critic | **Strong** — Playwright screenshot loop; the critic needs a separate model available | Works — wherever `bash` + a headless browser run |
+| **autopilot** | Not recommended — needs the full pipeline's tools | **Best** | **Strong** — composes the tier; **proven end-to-end** (critic needs a separate model) | Works — with repo + tool access |
 
-<sub>Menu names/commands drift between versions — the linked docs are the source of truth. Claude-specific bits (the plugin manifest format; deep-dive's parallel-subagent orchestration) don't all carry to Codex; the **methodology is fully portable** — `deep-dive` ships an *Environment & fallbacks* section that runs the same lanes serially when subagents aren't available.</sub>
+<sub>Menu names/commands drift between versions — the linked docs are the source of truth. Claude-specific bits (the plugin manifest format; deep-dive's parallel-subagent orchestration) don't all carry to Codex; the **methodology is fully portable** — `deep-dive` ships an *Environment & fallbacks* section that runs the same lanes serially when subagents aren't available, and `build-loop` falls back to a Playwright screenshot loop where interactive renderers aren't.</sub>
 
-### Option 1 — Claude Code plugin (all three, namespaced)
+### Option 1 — Claude Code plugin (all skills, namespaced)
 ```bash
 /plugin marketplace add nelsonwerd/idea-to-ship-skills
 /plugin install idea-to-ship@nelsonwerd
 ```
-Or, in the desktop app's **Code** tab: click **+** next to the prompt → **Plugins** → add this marketplace and install. The skills become `/idea-to-ship:ideate`, `/idea-to-ship:deep-dive`, `/idea-to-ship:prompt-pack` and auto-activate on matching requests (run `/reload-plugins` if they don't appear).
+Or, in the desktop app's **Code** tab: click **+** next to the prompt → **Plugins** → add this marketplace and install. The skills become `/idea-to-ship:ideate`, `/idea-to-ship:deep-dive`, `/idea-to-ship:prompt-pack`, `/idea-to-ship:autopilot`, `/idea-to-ship:build-loop` and auto-activate on matching requests (run `/reload-plugins` if they don't appear).
 
-> **Already have the skills installed manually?** They still work. To avoid duplicate names, remove the old copies first: `rm -rf ~/.claude/skills/{ideate,deep-dive,prompt-pack}`. (The plugin namespaces its skills, so it won't collide.)
+> **Already have the skills installed manually?** They still work. To avoid duplicate names, remove the old copies first: `rm -rf ~/.claude/skills/{ideate,deep-dive,prompt-pack,autopilot,build-loop}`. (The plugin namespaces its skills, so it won't collide.)
 
 ### Option 2 — copy the skills (any tool, always works — and the Codex path)
 ```bash
@@ -142,18 +167,22 @@ Each skill encodes a specific failure mode it prevents — learned the hard way 
 - **ideate** stops you from *speccing before validating* and from *building with no success metric or kill criterion*.
 - **deep-dive** stops you from *trusting a confident one-shot answer* on a high-stakes call — it red-teams its own conclusions and cites current sources.
 - **prompt-pack** stops a big build from *drifting* or *leaving the app half-broken between steps* — and keeps each unit small enough to outlast a context limit if you hit one.
+- **build-loop** stops a build from *looking done while half-wired* — it renders and exercises the real UI instead of trusting that it compiles, and reports a check it couldn't run as *not run*, never green.
+- **autopilot** stops an autonomous run from *overbuilding past its validated scope or faking a gate it actually abandoned* — the sharpest failure mode of "agent, go build it."
 
-Small, sharp, composable tools — not one monolith. That's the point.
+Small, sharp, composable tools across two tiers — not one monolith. That's the point.
 
 ## Standalone homes
 
-This repo bundles copies of the three as a suite; their canonical standalone repos are:
+This repo bundles the suite. The three **manual-tier** skills also have canonical standalone repos; the **autonomous-tier** skills live in the suite repo + live installs only (no standalone repo yet):
 
 | Skill | Repo |
 |---|---|
 | ideate | https://github.com/nelsonwerd/ideate-skill |
 | deep-dive | https://github.com/nelsonwerd/deep-dive-skill |
 | prompt-pack | https://github.com/nelsonwerd/prompt-pack-skill |
+| autopilot | *suite-only — no standalone repo* |
+| build-loop | *suite-only — no standalone repo* |
 
 ## License
 

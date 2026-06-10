@@ -3,3 +3,6 @@ research/
 
 # macOS
 .DS_Store
+
+# Local Claude Code state (launch configs, etc.) — keep local, never publish
+.claude/
