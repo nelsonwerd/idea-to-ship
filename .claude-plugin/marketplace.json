@@ -5,7 +5,7 @@
   "plugins": [
     {
       "name": "idea-to-ship",
-      "source": "nelsonwerd/idea-to-ship-skills",
+      "source": "./",
       "description": "Three composable skills (Claude + OpenAI Codex) — ideate, deep-dive, prompt-pack — for going from a fuzzy idea to shipped."
     }
   ]

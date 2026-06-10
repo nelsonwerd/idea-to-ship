@@ -22,10 +22,10 @@ This skill encodes a battle-tested format (refined across many real packs) so ev
 
 ## Why this exists (the problem it solves)
 
-- **Context/token limits kill long jobs.** A 900-turn chat runs out of room mid-task; the next chat has amnesia. Packs make each unit fit comfortably in one fresh chat.
-- **Big changes are risky.** Decomposing into ordered, independently-shippable steps with explicit guardrails keeps the app working between every step.
-- **Work relays across chats and tools.** A self-contained prompt can go to a new Claude chat or be pasted into another agent (e.g. Codex via `AGENTS.md`) with no loss.
+- **Big changes are risky.** Decomposing into ordered, independently-shippable steps with explicit guardrails keeps the app working — and reviewable — between every step. This is the core win, and it holds even with unlimited context.
+- **Work relays across chats and tools.** A self-contained prompt can go to a new Claude chat or be pasted into another agent (e.g. Codex via `AGENTS.md`) with no loss — so a build can move across sessions, tools, or people.
 - **Plans evaporate.** Writing the pack to a file in `docs/` means a future session — or a confused one — can be pointed at the source of truth.
+- **Long jobs can outrun a single chat.** You can run a whole pack in one thread; but if a chat fills up mid-build, each self-contained unit moves to a fresh one with no amnesia. (This matters most on token-constrained setups — it's a safety net, not the headline.)
 
 ## When to use this
 

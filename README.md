@@ -2,7 +2,7 @@
 
 **Three composable Agent Skills — for Claude and OpenAI Codex — that take an idea from *fuzzy* → *validated* → *sequenced build* → *shipped*.**
 
-Most "build with AI" workflows skip the hard half. They jump straight to code — and skip *deciding what's actually worth building*, *validating it honestly*, and *planning the build so it survives a context limit*. `idea-to-ship` is that missing front half: a small, sharp suite of Agent Skills (they run in **Claude** and **OpenAI Codex**), reverse-engineered from real idea→ship journeys (including the mistakes those journeys made), so you don't repeat them.
+Most "build with AI" workflows skip the hard half. They jump straight to code — and skip *deciding what's actually worth building*, *validating it honestly*, and *planning the build so it ships in safe, verifiable steps*. `idea-to-ship` is that missing front half: a small, sharp suite of Agent Skills (they run in **Claude** and **OpenAI Codex**), reverse-engineered from real idea→ship journeys (including the mistakes those journeys made), so you don't repeat them.
 
 ```
    ideate              deep-dive             prompt-pack            (you)
@@ -16,7 +16,7 @@ They're three **separate** skills on purpose — sharp triggers, lean context, i
 
 1. **`ideate`** — turn a fuzzy idea (or an existing thing you want to improve) into a *locked* concept + roadmap, captured in one living `CONCEPT_BRIEF.md`. A blunt, honest co-founder: it forces a success metric and a kill criterion, refuses to spec before the concept survives an honest pressure-test, and hands off cleanly to `prompt-pack`.
 2. **`deep-dive`** — the rigor engine `ideate` leans on for high-stakes validation (and that you can run directly on any codebase, strategy, design, or research question): parallel specialist agents → synthesis → adversarial red-team → a plain-English verdict with honest 1–10 confidence.
-3. **`prompt-pack`** — turn a settled concept into a sequence of self-contained, independently-shippable build prompts, each run in its own fresh chat so a big build never dies to a context/token limit. Also writes paste-ready handoffs to resume a dying chat or relay to another tool.
+3. **`prompt-pack`** — turn a settled concept into a sequence of self-contained, independently-shippable build prompts: each does one unit, verifies itself, and leaves the app working before the next. Run them in one chat or spread across many — each prompt is self-contained, so any unit moves cleanly to a fresh chat whenever you want (or need) one. Also writes paste-ready handoffs to resume a chat or relay work to another tool.
 
 → **execute** the prompts in Claude Code (or hand them to Codex / another tool).
 
@@ -41,7 +41,7 @@ Multi-agent investigative analysis for questions that deserve more than a one-sh
 > **Note — `deep-dive` is token-hungry by design.** A full run fans out 4–6 specialist agents (each writing thousands of words), then synthesis, follow-up verification, a red-team pass, and a briefing — easily 10+ agent calls and tens of thousands of tokens for one analysis. That's the right trade for a high-stakes call, and a great fit on a **Claude Max** plan (or any setup where you're not token-constrained). On a smaller plan, reach for it deliberately: lean on its built-in *Scale heuristics* (2–3 lanes for narrow scope, skip the red-team for low-stakes work), or ask for a single-pass review instead. `ideate` and `prompt-pack` are far lighter.
 
 ### 📦 prompt-pack — *turn it into a shippable plan*
-A big job → ordered, self-contained prompts you run one-per-fresh-chat, plus handoffs. Triggers: *"make a prompt pack"*, *"break this into phases"*, *"I'm running out of context"*, *"write me a handoff"*. → [prompt-pack-skill](https://github.com/nelsonwerd/prompt-pack-skill)
+A big job → ordered, self-contained prompts, each shippable on its own, plus handoffs. Run them in one chat or across many. Triggers: *"make a prompt pack"*, *"break this into phases"*, *"I'm running out of context"*, *"write me a handoff"*. → [prompt-pack-skill](https://github.com/nelsonwerd/prompt-pack-skill)
 
 ## How they compose
 
@@ -118,7 +118,7 @@ No restart needed in Claude Code (it detects them in-session); **restart Codex**
 Each skill encodes a specific failure mode it prevents — learned the hard way from real builds:
 - **ideate** stops you from *speccing before validating* and from *building with no success metric or kill criterion*.
 - **deep-dive** stops you from *trusting a confident one-shot answer* on a high-stakes call — it red-teams its own conclusions and cites current sources.
-- **prompt-pack** stops a big build from *dying to a context limit* or *drifting* mid-flight.
+- **prompt-pack** stops a big build from *drifting* or *leaving the app half-broken between steps* — and keeps each unit small enough to outlast a context limit if you hit one.
 
 Small, sharp, composable tools — not one monolith. That's the point.
 
