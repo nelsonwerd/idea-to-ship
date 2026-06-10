@@ -73,7 +73,7 @@ Run this cycle each iteration. The detailed per-step playbook — exact invocati
 3. **Exercise** — drive the core flows headless (Playwright or equivalent): click, fill, navigate; assert each flow completes end-to-end. Critically, assert **control→output coupling** — drive each input and confirm the output it claims to govern actually changes (this is how you catch a slider wired to nothing).
 4. **Check** — `axe` for a11y (contrast/focus/roles), Lighthouse for performance budgets, and a scan for broken assets/links.
 5. **Critique** — turn the above into a **defect list with severity** (Blocker / High / Medium / Low) and the acceptance criterion each one blocks. Every entry points at a checkable signal or a named criterion — **no vibes.** (Optionally, fold in the different-model critic's findings — below.)
-6. **Rebuild** — fix the **top** defects only, drawn from **both tracks** (machine defects AND design defects); don't refactor adjacent code or gold-plate. Then re-enter at step 1.
+6. **Rebuild — then loop again; don't stop because something got fixed.** Fix the **top** defects only, drawn from **both tracks** (machine AND design); don't refactor adjacent code or gold-plate. Then **re-enter at step 1** and re-ask the improvement questions every pass — *what's still broken? what's still below the bar? what would make this better?* **Keep iterating while ANY Blocker/High/Medium defect (either track) is open and BUDGET isn't hit.** Fixing one defect is the *start* of the next pass, not the end of the loop.
 
 **Every iteration advances two co-equal tracks** — (i) the objective machine facts (build/test/flows/console/a11y) and (ii), when design is load-bearing, the design bar. Neither substitutes for the other: green machine facts never excuse a skipped design loop, and a pretty screenshot never excuses a red test. Keep a **per-iteration ledger** carrying both — the objective signals (build exit, test pass count, flows passing, console-error count, a11y-violation count) **and** a design column (design-bar criteria met / design defects open). The objective signals are ground truth; the design column mixes checkable items (states present, contrast, responsiveness) with self-graded taste — keep the soft part labeled. That ledger *is* the craft-delta evidence you report — not "it looks better."
 
@@ -81,14 +81,14 @@ Run this cycle each iteration. The detailed per-step playbook — exact invocati
 
 Stop and report the moment **any** of these fires:
 
-- **PASS** — all acceptance criteria met, build/tests green, **and (when design is load-bearing) the design bar met via the visual loop** — not a green build/test alone. (Success — hand off.)
-- **PLATEAU** — craft-delta below threshold for **2 consecutive iterations**, where "below threshold" means *no new acceptance criterion passed AND no defect of severity ≥ Medium closed.* (Diminishing returns — hand off what's left.)
-- **BUDGET** — the iteration cap is reached (**default 5**; the caller may set it). This is the hard backstop.
+- **PASS** — **no open Blocker/High/Medium defect on either track**: all acceptance criteria met, build/tests green, and (when design is load-bearing) the design bar met via the visual loop. A green build/test alone is **not** PASS — and neither is "fixed a couple of things" while the ledger or the critic still lists open Medium+ defects. (Success — hand off; any Low/Note residue goes in the report.)
+- **PLATEAU** — **2 consecutive iterations with genuinely no progress** (no acceptance criterion newly passed AND no defect of severity ≥ Medium closed). A re-critique or the different-model critic **surfacing new Medium+ defects is progress to act on next pass, not a plateau.** (True diminishing returns — hand off what's left.)
+- **BUDGET** — the iteration cap is reached (**default 5; never set below 3 for a design-load-bearing build; caller-settable**). This is the finite hard backstop.
 - **BLOCKED** — the next defect needs a human or real-world signal the loop can't get (a taste call, an external-oracle/content check, a paste-into-production test). **STOP and emit it** as a human gate — carrying `prompt-pack`'s execute-discipline: never fake it, render a passed-looking result, or build past it to look complete.
 
 **Why this can't infinite-loop:** BUDGET is an unconditional counter — even if PASS, PLATEAU, and BLOCKED never trigger, the loop halts at N iterations. The other three only ever stop it *sooner*. Every run terminates.
 
-Always report **which condition fired** and the **before/after on the objective ledger** — so the caller sees the actual craft-delta, not a vibe.
+Always report the **iteration count** (how many full passes ran), the **per-iteration ledger** (both tracks), **which condition fired**, and the **open-defect queue at stop** — so a one-pass run on a non-trivial build is visibly incomplete and a premature stop is obvious. The craft-delta is the ledger, not a vibe. (More passes close *checkable* defects — they don't reach the last-mile tail the loop can't see; don't read "more iterations" as "perfect.")
 
 ## The different-model critic (default when design is load-bearing; optional for plain utilities)
 
@@ -115,6 +115,7 @@ The method is portable; only the tooling degrades. Substitute the fallback and *
 - **Looping with no acceptance criteria** — guarantees thrash or an arbitrary stop. Lock the target first.
 - **Substituting a unit test for the visual loop when design is load-bearing** — a green programmatic check is *not* a design pass. If feel is load-bearing, render + screenshot + critique the real UI every iteration, or report the visual loop NOT RUN. (This is the exact shortcut a proof run took once — don't repeat it.)
 - **One-shot design instead of iterated** — judging the UI once and never again. The design bar is advanced every iteration alongside the machine facts, not eyeballed at the end.
+- **One-and-done** — fixing a defect or two, then declaring done while the critic or the ledger still lists open Blocker/High/Medium defects. That's stopping *before* a real stop-condition fires; keep looping until none are open or BUDGET hits. (The exact shortcut a proof run took: one fix, the critic surfaced more, it stopped anyway.)
 - **Treating self-graded "looks good" as a pass** — it's the monoculture. Pass on objective signals; let the critic + a human handle taste.
 - **Faking a signal you couldn't run** — a skipped check is reported skipped, never green.
 - **Reinventing the harness** — compose the existing tools; if you find yourself writing a bespoke test-runner/agent framework, stop (that's not this skill).

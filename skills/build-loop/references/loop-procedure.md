@@ -64,10 +64,11 @@ The machine track is ground truth. The design track mixes **checkable** items (s
 
 - Fix **only** the selected top defects (machine and design). Don't refactor adjacent code, rename things, or gold-plate (borrow `prompt-pack`'s scope discipline — a tight diff is reviewable; a sprawling one isn't).
 - Re-enter at Step 1. Re-run the full ledger — both tracks — so the delta is measured, not assumed.
+- **This is the start of the next pass, not the end.** Re-ask: what's still broken? what's still below the bar? what would make it better? Keep looping while any Blocker/High/Medium (either track) is open and BUDGET isn't hit — don't stop just because something got fixed.
 
 ## Closing an iteration — apply the stop-condition
 
-After the rebuild + re-measure, check the stop-condition (in `SKILL.md`): **PASS / PLATEAU / BUDGET / BLOCKED.** PASS requires **both tracks** — acceptance criteria + build/tests green, and (when design is load-bearing) the design bar met via the visual loop; a green build/test alone is not PASS. If one condition fires, stop and report; otherwise loop again. BUDGET (default N=5) is the unconditional hard backstop that guarantees termination.
+After the rebuild + re-measure, check the stop-condition (in `SKILL.md`): **PASS / PLATEAU / BUDGET / BLOCKED.** **PASS requires NO open Blocker/High/Medium on either track** (acceptance criteria + build/tests green and, when design is load-bearing, the design bar met) — not a green build/test alone, and not "fixed a couple while the critic/ledger still lists Medium+ open." **PLATEAU only after 2 consecutive iterations of genuinely no progress** — a re-critique surfacing new Medium+ defects is progress to act on next pass, not a plateau. If none fires, **loop again.** BUDGET (default 5; never below 3 for a load-bearing build; caller-settable) is the unconditional finite hard backstop that guarantees termination.
 
 ## Handling a "cannot see" defect mid-loop
 
@@ -75,7 +76,8 @@ If a defect needs a signal the loop can't produce — content correctness agains
 
 ## What to report at the end
 
-- The **stop-condition** that fired.
-- The **before/after ledger** (the objective signals from iteration 0 to the last) — the concrete craft-delta.
-- The **open defects** handed off, split into *machine-checkable but deferred* vs. *the cannot-see tail a human must finish.*
+- The **iteration count** — how many full passes ran. A one-pass run on a non-trivial build is visibly incomplete; show the number so a premature stop is obvious.
+- The **per-iteration ledger** (both tracks, each pass) — the concrete before→after craft-delta, not a vibe.
+- **Which stop-condition fired** (PASS / PLATEAU / BUDGET / BLOCKED).
+- The **open-defect queue at stop** — every still-open defect by severity, split into *machine-checkable but deferred*, *the cannot-see tail a human must finish*, and any *Low/Note residue*. If anything ≥ Medium is still open, only **BUDGET** or **BLOCKED** justifies stopping — say which.
 - Any signal **not run** (and why), reported as not-run — never as passed.
