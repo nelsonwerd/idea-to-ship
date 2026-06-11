@@ -85,6 +85,8 @@ A big job → ordered, self-contained prompts, each shippable on its own, plus h
 **Autonomous tier — the pipeline drives itself.**
 
 > **Honest bound, up front.** The autonomous tier produces a near-finish-line-*aimed* **first draft a human finishes** — not a finished or market-validated product. Three limits it doesn't escape: a **~80% craft ceiling** with a last-mile correctness/security/taste tail; the **grounding firewall** (real data may discover the problem and seed the build, but a synthetic persona's reaction never counts as validation); and judgment quality isn't cleanly measurable — its go/kill calls are a **signal a human weighs**, never proof. Market validation stays the human handoff.
+>
+> **And it's token-heavy.** A single `autopilot` run drives the whole pipeline — a `deep-dive`, a multi-pass visual loop, a different-model critic — so it can span hours and a lot of tokens. Best on a **bigger plan (e.g. Claude Max)** or any setup where you're not token-constrained; on a smaller plan, reach for the manual-tier skills directly, or scope the run tight.
 
 ### 🚀 autopilot — *fly the whole pipeline autonomously*
 Runs **ideate → deep-dive → prompt-pack → build-loop** end-to-end, in character as a *grounded* founder-persona — **composing** the manual-tier skills, never reimplementing them. Hands back a `CONCEPT_BRIEF`, a validated build pack, a first-draft product, and an honest ledger of what only a human/market can finish. Carries **execute-discipline** (build only the gated scope; emit a human-only gate, never fake it). Triggers: *"run autopilot"*, *"build this idea→ship autonomously"*, *"fly the whole pipeline end to end"*. *Suite-only — no standalone repo.*
