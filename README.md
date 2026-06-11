@@ -142,6 +142,8 @@ The skill *format* is portable; some *runtime* features (parallel subagents, pro
 
 <sub>Menu names/commands drift between versions — the linked docs are the source of truth. Claude-specific bits (the plugin manifest format; deep-dive's parallel-subagent orchestration) don't all carry to Codex; the **methodology is fully portable** — `deep-dive` ships an *Environment & fallbacks* section that runs the same lanes serially when subagents aren't available, and `build-loop` falls back to a Playwright screenshot loop where interactive renderers aren't.</sub>
 
+> **On the autonomous tier specifically:** its design loop leans on a *different-model critic* + parallel orchestration that are richest in **Claude Code** — where it can spawn a genuinely different model to grade taste. In our runs, the *design* output was noticeably stronger on Claude; on Codex the pipeline still runs end-to-end (proven), but without a separate model for the taste critic it degrades, so expect weaker polish. **Reach for Claude when feel is the wedge** — and either way, a human spot-check stays the final taste gate.
+
 ### Option 1 — Claude Code plugin (all skills, namespaced)
 ```bash
 /plugin marketplace add nelsonwerd/idea-to-ship-skills
