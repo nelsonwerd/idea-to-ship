@@ -8,9 +8,11 @@ Most "build with AI" workflows skip the hard half. They jump straight to code �
   <img src="assets/pipeline.svg" alt="The idea-to-ship pipeline — ideate → deep-dive → prompt-pack → build-loop — run by hand (manual tier) or via autopilot (autonomous tier)." width="760">
 </p>
 
-<!-- DEMO: the single highest-impact visual is a real one. Drop a short demo gif / asciinema of a skill running (e.g. ideate producing a CONCEPT_BRIEF), or a screenshot of real output, here — for example:
-<p align="center"><img src="assets/demo.gif" alt="ideate producing a CONCEPT_BRIEF" width="760"></p>
--->
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nelsonwerd/redline-autopilot-case-study/222a0ea50dabd02934dc0ae5b8d14b8586e78318/docs/ledgers/screens/COMBINED_VERIFICATION/crit-demo-hero-1440.png" alt="A Redline crit page: verdict, craft grade, and per-dimension scores for a real AI-built site. Built unattended by autopilot in one overnight run." width="760">
+  <br>
+  <sub>Real output: a crit page from <strong>Redline</strong>, built unattended by <code>autopilot</code> in one 13.5-hour overnight run. See <a href="docs/CASE_STUDY_REDLINE.md">the case study</a>, including where it failed.</sub>
+</p>
 
 They're **separate, composable** skills on purpose — sharp triggers, lean context, independent use. Run them **by hand** (the manual tier), or let **`autopilot`** fly the whole line for you (the autonomous tier).
 
@@ -84,17 +86,36 @@ A big job → ordered, self-contained prompts, each shippable on its own, plus h
 
 **Autonomous tier — the pipeline drives itself.**
 
-> **Experimental — and honest about why.** The autonomous tier is an early, lightly-proven experiment: genuinely capable and a lot of fun to watch, but not battle-tested — treat it as a promising prototype, not a production tool. It produces a near-finish-line-*aimed* **first draft a human finishes** — not a finished or market-validated product. Three limits it doesn't escape: a **~80% craft ceiling** with a last-mile correctness/security/taste tail; the **grounding firewall** (real data may discover the problem and seed the build, but a synthetic persona's reaction never counts as validation); and judgment quality isn't cleanly measurable — its go/kill calls are a **signal a human weighs**, never proof. Market validation stays the human handoff.
+> **Experimental — and honest about why.** The autonomous tier is an early, lightly-proven experiment: genuinely capable and a lot of fun to watch, but not battle-tested — treat it as a promising prototype, not a production tool. It produces a near-finish-line-*aimed* **first draft a human finishes** — not a finished or market-validated product. Three limits it doesn't escape: a **~80% craft ceiling** with a last-mile correctness/security/taste tail; the **grounding firewall** (real data may discover the problem and seed the build, but a synthetic persona's reaction never counts as validation); and judgment quality isn't cleanly measurable — its go/kill calls are a **signal a human weighs**, never proof. Market validation stays the human handoff. We stress-tested it on a heavy overnight run; [the case study](docs/CASE_STUDY_REDLINE.md) shows exactly what came back, including where it failed.
 >
-> **And it's token-heavy.** A single `autopilot` run drives the whole pipeline — a `deep-dive`, a multi-pass visual loop, a different-model critic — so it can span hours and a lot of tokens. Best on a **bigger plan (e.g. Claude Max)** or any setup where you're not token-constrained; on a smaller plan, reach for the manual-tier skills directly, or scope the run tight.
+> **And it's token-heavy.** A single `autopilot` run drives the whole pipeline — a `deep-dive`, a multi-pass visual loop, a different-model critic — so it can span hours and a lot of tokens (measured on one heavy run: ~24.1M fresh tokens, ~784M processed of which 97% were prompt-cache reads; see the case study). Best on a **bigger plan (e.g. Claude Max)** or any setup where you're not token-constrained; on a smaller plan, reach for the manual-tier skills directly, or scope the run tight.
 
 ### 🚀 autopilot — *fly the whole pipeline autonomously*
-Runs **ideate → deep-dive → prompt-pack → build-loop** end-to-end, in character as a *grounded* founder-persona — **composing** the manual-tier skills, never reimplementing them. Hands back a `CONCEPT_BRIEF`, a validated build pack, a first-draft product, and an honest ledger of what only a human/market can finish. Carries **execute-discipline** (build only the gated scope; emit a human-only gate, never fake it). Triggers: *"run autopilot"*, *"build this idea→ship autonomously"*, *"fly the whole pipeline end to end"*. *Suite-only — no standalone repo.*
+Runs **ideate → deep-dive → prompt-pack → build-loop** end-to-end, in character as a *grounded* founder-persona — **composing** the manual-tier skills, never reimplementing them. Hands back a `CONCEPT_BRIEF`, a validated build pack, a first-draft product, and an honest ledger of what only a human/market can finish. Carries **execute-discipline** (build only the gated scope; emit a human-only gate, never fake it). Stress-tested on a 13.5-hour unattended run → [the case study](docs/CASE_STUDY_REDLINE.md). Triggers: *"run autopilot"*, *"build this idea→ship autonomously"*, *"fly the whole pipeline end to end"*. *Suite-only — no standalone repo.*
 
 ### 🔁 build-loop — *drive a build to near-finish-line craft*
 Loops **build → see → exercise → check → critique → rebuild** over the agent's existing tools (headless screenshot + vision to *see*, Playwright to *exercise*, axe/Lighthouse to *check*) until acceptance criteria pass or a stop-condition fires — no infinite thrash. When feel is load-bearing it runs a **mandatory, multi-pass visual design loop** (render → critique → fix → re-render, every iteration) with a different-model critic as the taste check. Honest bound: it flags *ugly/broken/missing* reliably but stays self-graded on *genuinely good* → a **human spot-check is the final taste gate**; market validation is out of scope. Triggers: *"tighten this build"*, *"iterate until it passes"*, *"self-verify the UI"*. *Suite-only — no standalone repo.*
 
 *An optional `ground` module — real data to seed the persona and the build — is planned; the autonomous tier runs fully without it, and the firewall holds either way.*
+
+## Case study: a 13.5-hour autonomous run
+
+I pointed `autopilot` at the heaviest mandate I could write (find your own grounded niche, build a real frontend and backend, hold a serious design bar, don't stop to ask) and went to bed. It ran unattended overnight and came back with **Redline**: a working design-crit engine for AI-built frontends. Paste a URL, a deterministic render-and-measure pipeline crits the page like a designer would, with typed findings and visual evidence.
+
+The numbers below were re-verified from git, the session transcripts, and a cold re-run of the test wall in an isolated copy. Not self-reports.
+
+- **13.5 hours** wall clock, **22 commits**, 16/16 prompt-pack units passed, zero human interventions
+- **~27,000 lines** of TypeScript; **387 unit tests + 92 e2e**, all reproduced green
+- 47 build/critic passes, a 13-agent deep-dive, 372 screenshots kept as evidence
+- **~24.1M fresh tokens** (~784M processed, 97% of that prompt-cache reads). Plan accordingly.
+- **7 human gates emitted and left open**, none faked: API keys, deploy sign-off, taste review, market validation
+
+And the half that makes this worth reading: the product thesis is **unproven** (the engine was calibrated and validated on the same 24 sites), and the build shipped with a **known, documented, unfixed SSRF vulnerability** parked behind a do-not-deploy checklist it could not clear itself. That is the ~80% ceiling, with receipts.
+
+- The write-up (exact kickoff prompt, verified numbers, where it failed): **[docs/CASE_STUDY_REDLINE.md](docs/CASE_STUDY_REDLINE.md)**
+- The artifact itself (full 22-commit history, ledgers, gates, the debrief): **[redline-autopilot-case-study](https://github.com/nelsonwerd/redline-autopilot-case-study)**
+
+> The built product must **not** be deployed publicly as-is. Details and disclaimers in the case study.
 
 ## How they compose
 
@@ -140,11 +161,11 @@ The skill *format* is portable; some *runtime* features (parallel subagents, pro
 | **deep-dive** | Works (degraded: no repo/file access; lanes run serially) | **Best** — parallel subagents + web | Strong — same lanes run **serially** (lower cross-agent independence, so confidence is capped); external claims labeled *unverified* if no web | Works (degraded: serial lanes, local-only; label external claims *unverified*) |
 | **prompt-pack** | Limited — best for high-level planning/handoffs; weak without repo access | **Best** | **Best** — reads `AGENTS.md`, full repo access | Works — with repo/file access |
 | **build-loop** | Limited — no headless browser/Playwright; degrades to build/test/static checks (say so) | **Best** — interactive renderers + Playwright + a different-model critic | **Strong** — Playwright screenshot loop; the critic needs a separate model available | Works — wherever `bash` + a headless browser run |
-| **autopilot** | Not recommended — needs the full pipeline's tools | **Best** | **Strong** — composes the tier; **proven end-to-end** (critic needs a separate model) | Works — with repo + tool access |
+| **autopilot** | Not recommended — needs the full pipeline's tools | **Best** | Runs end-to-end — but shallow on our heavy test, and the critic needs a separate model (see the [case study](docs/CASE_STUDY_REDLINE.md)'s cross-agent notes) | Works — with repo + tool access |
 
 <sub>Menu names/commands drift between versions — the linked docs are the source of truth. Claude-specific bits (the plugin manifest format; deep-dive's parallel-subagent orchestration) don't all carry to Codex; the **methodology is fully portable** — `deep-dive` ships an *Environment & fallbacks* section that runs the same lanes serially when subagents aren't available, and `build-loop` falls back to a Playwright screenshot loop where interactive renderers aren't.</sub>
 
-> **On the autonomous tier specifically:** its design loop leans on a *different-model critic* + parallel orchestration that are richest in **Claude Code** — where it can spawn a genuinely different model to grade taste. In our runs, the *design* output was noticeably stronger on Claude; on Codex the pipeline still runs end-to-end (proven), but without a separate model for the taste critic it degrades, so expect weaker polish. **Reach for Claude when feel is the wedge** — and either way, a human spot-check stays the final taste gate.
+> **On the autonomous tier specifically:** its design loop leans on a *different-model critic* + parallel orchestration that are richest in **Claude Code** — where it can spawn a genuinely different model to grade taste. In our runs, the *design* output was noticeably stronger on Claude; on Codex the pipeline still runs end-to-end, but it went much shallower on the same heavy ask (~15 minutes vs 13.5 hours; cross-agent notes in [the case study](docs/CASE_STUDY_REDLINE.md)), and without a separate model for the taste critic it degrades, so expect weaker polish. **Reach for Claude when feel is the wedge** — and either way, a human spot-check stays the final taste gate.
 
 ### Option 1 — Claude Code plugin (all skills, namespaced)
 ```bash
@@ -187,6 +208,7 @@ This repo bundles the suite. The three **manual-tier** skills also have canonica
 | prompt-pack | https://github.com/nelsonwerd/prompt-pack-skill |
 | autopilot | *suite-only — no standalone repo* |
 | build-loop | *suite-only — no standalone repo* |
+| *case study (the heavy autonomous run)* | https://github.com/nelsonwerd/redline-autopilot-case-study |
 
 ## License
 
