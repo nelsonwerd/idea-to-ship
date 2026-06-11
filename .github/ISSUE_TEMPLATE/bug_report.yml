@@ -1,0 +1,43 @@
+name: Bug report
+description: A skill misbehaves, produces wrong output, or doesn't trigger as expected.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for the report. Concrete examples — what you typed, what you expected, what you got — make these fixable fast.
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Which skill?
+      options:
+        - ideate
+        - deep-dive
+        - prompt-pack
+        - autopilot
+        - build-loop
+        - plugin / install
+        - not sure
+    validations:
+      required: true
+  - type: input
+    id: surface
+    attributes:
+      label: Where are you running it?
+      placeholder: Claude Code / Claude app / OpenAI Codex / other agent
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you asked, what you expected, and what you actually got. Paste output if you can.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 760 252" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ttl desc">
+  <title id="ttl">idea-to-ship pipeline</title>
+  <desc id="desc">Four composable skills — ideate, deep-dive, prompt-pack, build-loop — taking an idea from fuzzy to shipped. Run them by hand (manual tier) or let autopilot fly the whole line (autonomous tier).</desc>
+  <defs>
+    <marker id="arw" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0 0 L8 4 L0 8 Z" fill="#C5C0B6"/>
+    </marker>
+  </defs>
+  <rect x="2" y="2" width="756" height="248" rx="16" fill="#FBFAF8" stroke="#E7E4DD"/>
+  <text x="20" y="38" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" letter-spacing="1.5" fill="#A7A299">THE  IDEA → SHIP  PIPELINE</text>
+  <text x="20" y="69" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#5E5A52">MANUAL <tspan fill="#A7A299" font-weight="400">— drive each step yourself</tspan></text>
+  <g font-family="system-ui, -apple-system, sans-serif">
+    <rect x="20" y="84" width="150" height="56" rx="11" fill="#FFFFFF" stroke="#D9D5CC"/>
+    <text x="95" y="110" text-anchor="middle" font-size="15" font-weight="650" fill="#1A1A1A">ideate</text>
+    <text x="95" y="128" text-anchor="middle" font-size="11" fill="#8C877E">lock the concept</text>
+    <rect x="210" y="84" width="150" height="56" rx="11" fill="#FFFFFF" stroke="#D9D5CC"/>
+    <text x="285" y="110" text-anchor="middle" font-size="15" font-weight="650" fill="#1A1A1A">deep-dive</text>
+    <text x="285" y="128" text-anchor="middle" font-size="11" fill="#8C877E">pressure-test it</text>
+    <rect x="400" y="84" width="150" height="56" rx="11" fill="#FFFFFF" stroke="#D9D5CC"/>
+    <text x="475" y="110" text-anchor="middle" font-size="15" font-weight="650" fill="#1A1A1A">prompt-pack</text>
+    <text x="475" y="128" text-anchor="middle" font-size="11" fill="#8C877E">sequence the build</text>
+    <rect x="590" y="84" width="150" height="56" rx="11" fill="#FFFFFF" stroke="#D9D5CC"/>
+    <text x="665" y="110" text-anchor="middle" font-size="15" font-weight="650" fill="#1A1A1A">build-loop</text>
+    <text x="665" y="128" text-anchor="middle" font-size="11" fill="#8C877E">drive to near-finish</text>
+  </g>
+  <g stroke="#C5C0B6" stroke-width="1.5" fill="none">
+    <path d="M174 112 H202" marker-end="url(#arw)"/>
+    <path d="M364 112 H392" marker-end="url(#arw)"/>
+    <path d="M554 112 H582" marker-end="url(#arw)"/>
+  </g>
+  <g stroke="#C7C2F0" stroke-width="1.5">
+    <line x1="95" y1="140" x2="95" y2="170"/>
+    <line x1="285" y1="140" x2="285" y2="170"/>
+    <line x1="475" y1="140" x2="475" y2="170"/>
+    <line x1="665" y1="140" x2="665" y2="170"/>
+  </g>
+  <rect x="20" y="170" width="720" height="40" rx="11" fill="#4F46E5"/>
+  <text x="380" y="195" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#FFFFFF"><tspan font-weight="700">AUTONOMOUS</tspan><tspan fill="#CFCBFA"> — </tspan><tspan font-family="ui-monospace, 'SF Mono', monospace">autopilot</tspan><tspan fill="#CFCBFA"> flies the whole line</tspan></text>
+  <text x="380" y="236" text-anchor="middle" font-family="ui-monospace, 'SF Mono', monospace" font-size="10.5" fill="#A7A299">fuzzy idea → validated → sequenced build → shipped</text>
+</svg>

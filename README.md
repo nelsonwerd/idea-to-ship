@@ -4,13 +4,13 @@
 
 Most "build with AI" workflows skip the hard half. They jump straight to code — and skip *deciding what's actually worth building*, *validating it honestly*, and *planning the build so it ships in safe, verifiable steps*. `idea-to-ship` is that missing front half — plus the autonomous build loop on the far side of it: a small, sharp suite of Agent Skills (they run in **Claude** and **OpenAI Codex**), reverse-engineered from real idea→ship journeys (including the mistakes those journeys made), so you don't repeat them.
 
-```
-   ideate          deep-dive          prompt-pack          build-loop
- fuzzy idea  ──▶  pressure-test  ──▶  sequenced build ──▶  drive to near-finish
-     ╰────────▶  CONCEPT_BRIEF.md  ──────▶  build prompts  ──────▶  working draft
+<p align="center">
+  <img src="assets/pipeline.svg" alt="The idea-to-ship pipeline — ideate → deep-dive → prompt-pack → build-loop — run by hand (manual tier) or via autopilot (autonomous tier)." width="760">
+</p>
 
-  MANUAL: you drive each step    ·    AUTONOMOUS: `autopilot` flies the whole line
-```
+<!-- DEMO: the single highest-impact visual is a real one. Drop a short demo gif / asciinema of a skill running (e.g. ideate producing a CONCEPT_BRIEF), or a screenshot of real output, here — for example:
+<p align="center"><img src="assets/demo.gif" alt="ideate producing a CONCEPT_BRIEF" width="760"></p>
+-->
 
 They're **separate, composable** skills on purpose — sharp triggers, lean context, independent use. Run them **by hand** (the manual tier), or let **`autopilot`** fly the whole line for you (the autonomous tier).
 

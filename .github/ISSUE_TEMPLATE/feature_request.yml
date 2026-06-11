@@ -1,0 +1,22 @@
+name: Skill request or improvement
+description: Suggest a new skill, or an improvement to an existing one.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: The workflow or failure mode you wish a skill handled.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would the skill do?
+      description: Triggers, inputs, and what it produces. If it's an improvement, name the existing skill.
+    validations:
+      required: true
+  - type: textarea
+    id: priorart
+    attributes:
+      label: Anything you've already tried, or prior art?
